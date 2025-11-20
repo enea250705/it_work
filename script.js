@@ -1,103 +1,152 @@
-// Mobile Menu Toggle with enhanced animations
+// Enhanced Hamburger Menu with Modern Mobile Features
 const menuToggle = document.querySelector('.menu-toggle');
 const navMenu = document.querySelector('.nav-menu');
 const navLinks = document.querySelectorAll('.nav-link');
 let isMenuOpen = false;
 
-// Add haptic feedback for mobile devices
-function addHapticFeedback() {
-    if (navigator.vibrate) {
-        navigator.vibrate(50);
+// Enhanced toggle menu function
+function toggleMenu() {
+    isMenuOpen = !isMenuOpen;
+    
+    navMenu.classList.toggle('active', isMenuOpen);
+    menuToggle.classList.toggle('active', isMenuOpen);
+    
+    // Prevent body scroll when menu is open
+    document.body.style.overflow = isMenuOpen ? 'hidden' : '';
+    
+    // Add ARIA attributes for accessibility
+    menuToggle.setAttribute('aria-expanded', isMenuOpen);
+    navMenu.setAttribute('aria-hidden', !isMenuOpen);
+    
+    // Focus management for accessibility
+    if (isMenuOpen) {
+        // Trap focus within menu
+        trapFocus(navMenu);
+        // Focus first menu item
+        setTimeout(() => {
+            const firstLink = navMenu.querySelector('.nav-link');
+            if (firstLink) firstLink.focus();
+        }, 300);
+    } else {
+        // Return focus to toggle button
+        menuToggle.focus();
+        removeFocusTrap();
     }
 }
 
-// Enhanced menu toggle with better animations
-menuToggle.addEventListener('click', (e) => {
-    e.preventDefault();
-    addHapticFeedback();
+// Enhanced close menu function
+function closeMenu() {
+    if (!isMenuOpen) return;
     
-    isMenuOpen = !isMenuOpen;
-    navMenu.classList.toggle('active');
-    menuToggle.classList.toggle('active');
+    isMenuOpen = false;
+    navMenu.classList.remove('active');
+    menuToggle.classList.remove('active');
+    document.body.style.overflow = '';
     
-    // Prevent body scroll when menu is open
-    if (isMenuOpen) {
-        document.body.style.overflow = 'hidden';
-        // Add entrance animation
-        setTimeout(() => {
-            navLinks.forEach((link, index) => {
-                link.style.animationDelay = `${index * 0.05}s`;
-            });
-        }, 100);
+    // Update ARIA attributes
+    menuToggle.setAttribute('aria-expanded', false);
+    navMenu.setAttribute('aria-hidden', true);
+    
+    // Remove focus trap
+    removeFocusTrap();
+}
+
+// Focus trap functionality for accessibility
+let focusableElements = [];
+let firstFocusableElement = null;
+let lastFocusableElement = null;
+
+function trapFocus(container) {
+    focusableElements = container.querySelectorAll(
+        'a[href], button, textarea, input[type="text"], input[type="radio"], input[type="checkbox"], select'
+    );
+    firstFocusableElement = focusableElements[0];
+    lastFocusableElement = focusableElements[focusableElements.length - 1];
+    
+    container.addEventListener('keydown', handleFocusTrap);
+}
+
+function removeFocusTrap() {
+    if (navMenu) {
+        navMenu.removeEventListener('keydown', handleFocusTrap);
+    }
+    focusableElements = [];
+    firstFocusableElement = null;
+    lastFocusableElement = null;
+}
+
+function handleFocusTrap(e) {
+    const isTabPressed = e.key === 'Tab';
+    
+    if (!isTabPressed) return;
+    
+    if (e.shiftKey) {
+        // Shift + Tab
+        if (document.activeElement === firstFocusableElement) {
+            lastFocusableElement.focus();
+            e.preventDefault();
+        }
     } else {
-        document.body.style.overflow = '';
+        // Tab
+        if (document.activeElement === lastFocusableElement) {
+            firstFocusableElement.focus();
+            e.preventDefault();
+        }
     }
+}
+
+// Event listeners
+menuToggle.addEventListener('click', toggleMenu);
+
+// Close menu when clicking on nav links
+navLinks.forEach(link => {
+    link.addEventListener('click', closeMenu);
 });
 
-// Close mobile menu when clicking on a link
-navLinks.forEach((link, index) => {
-    link.addEventListener('click', (e) => {
-        // Add click animation
-        link.style.transform = 'scale(0.95)';
-        setTimeout(() => {
-            link.style.transform = '';
-        }, 150);
-        
-        // Close menu after a short delay for better UX
-        setTimeout(() => {
-            navMenu.classList.remove('active');
-            menuToggle.classList.remove('active');
-            document.body.style.overflow = '';
-            isMenuOpen = false;
-        }, 200);
-    });
-});
-
-// Close menu when clicking outside or on close button
+// Enhanced outside click handling with touch support
 document.addEventListener('click', (e) => {
-    // Check if clicked on the close button (::after pseudo-element area)
-    const rect = navMenu.getBoundingClientRect();
-    const closeButtonArea = {
-        x: rect.right - 60,
-        y: rect.top + 20,
-        width: 40,
-        height: 40
-    };
-    
-    const isCloseButtonClick = isMenuOpen && 
-        e.clientX >= closeButtonArea.x && 
-        e.clientX <= closeButtonArea.x + closeButtonArea.width &&
-        e.clientY >= closeButtonArea.y && 
-        e.clientY <= closeButtonArea.y + closeButtonArea.height;
-    
-    if (isCloseButtonClick || (isMenuOpen && !navMenu.contains(e.target) && !menuToggle.contains(e.target))) {
-        navMenu.classList.remove('active');
-        menuToggle.classList.remove('active');
-        document.body.style.overflow = '';
-        isMenuOpen = false;
-        addHapticFeedback();
+    if (isMenuOpen && 
+        !navMenu.contains(e.target) && 
+        !menuToggle.contains(e.target)) {
+        closeMenu();
     }
 });
 
-// Close menu on escape key
+// Touch handling for mobile
+document.addEventListener('touchstart', (e) => {
+    if (isMenuOpen && 
+        !navMenu.contains(e.target) && 
+        !menuToggle.contains(e.target)) {
+        closeMenu();
+    }
+}, { passive: true });
+
+// Enhanced keyboard handling
 document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && isMenuOpen) {
-        navMenu.classList.remove('active');
-        menuToggle.classList.remove('active');
-        document.body.style.overflow = '';
-        isMenuOpen = false;
+        closeMenu();
+    }
+    
+    // Handle menu toggle with Enter/Space when focused
+    if ((e.key === 'Enter' || e.key === ' ') && 
+        document.activeElement === menuToggle) {
+        e.preventDefault();
+        toggleMenu();
     }
 });
 
-// Handle window resize
+// Enhanced window resize handling
 window.addEventListener('resize', () => {
     if (window.innerWidth > 768 && isMenuOpen) {
-        navMenu.classList.remove('active');
-        menuToggle.classList.remove('active');
-        document.body.style.overflow = '';
-        isMenuOpen = false;
+        closeMenu();
     }
 });
+
+// Add smooth scrolling offset for mobile menu
+function adjustScrollOffset() {
+    const isMobile = window.innerWidth <= 768;
+    return isMobile ? 100 : 80;
+}
 
 // Navbar scroll effect
 const navbar = document.querySelector('.navbar');
@@ -122,11 +171,16 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         const target = document.querySelector(this.getAttribute('href'));
         
         if (target) {
-            const offsetTop = target.offsetTop - 80;
+            const offsetTop = target.offsetTop - adjustScrollOffset();
             window.scrollTo({
                 top: offsetTop,
                 behavior: 'smooth'
             });
+            
+            // Close mobile menu after navigation
+            if (isMenuOpen) {
+                setTimeout(closeMenu, 100);
+            }
         }
     });
 });
