@@ -505,16 +505,13 @@ if (contactForm) {
     });
 }
 
-// Enhanced counter animation with easing - improved version
+// Counter animation function - SIMPLIFIED
 const animateCounter = (element, target, duration = 2000) => {
     if (!element || !target || target <= 0) return;
     
     let start = 0;
     const startTime = performance.now();
-    
-    // Get suffix (+ or other characters) from data attribute or current text
-    const originalText = element.getAttribute('data-original') || element.textContent || '';
-    const suffix = originalText.replace(/\d/g, '') || '+';
+    const suffix = '+'; // Always use + suffix
     
     const easeOutCubic = (t) => {
         return 1 - Math.pow(1 - t, 3);
@@ -525,143 +522,85 @@ const animateCounter = (element, target, duration = 2000) => {
         const progress = Math.min(elapsed / duration, 1);
         const easedProgress = easeOutCubic(progress);
         
-        start = target * easedProgress;
-        const currentValue = Math.floor(start);
-        
-        // Update text content
-        if (element && element.textContent !== undefined) {
-            element.textContent = currentValue + suffix;
-        }
+        const currentValue = Math.floor(target * easedProgress);
+        element.textContent = currentValue + suffix;
         
         if (progress < 1) {
             requestAnimationFrame(updateCounter);
         } else {
-            // Ensure final value is set correctly
-            if (element && element.textContent !== undefined) {
-                element.textContent = target + suffix;
-            }
+            element.textContent = target + suffix;
         }
     };
     
     requestAnimationFrame(updateCounter);
 };
 
-// Enhanced stats animation with stagger and counter animation - WORKING VERSION
+// Counter animation - SIMPLIFIED AND WORKING VERSION
 function initStatsCounter() {
     const statsSection = document.querySelector('.stats');
-    if (!statsSection) {
-        console.log('Stats section not found');
-        return;
-    }
+    if (!statsSection) return;
     
-    const statNumbers = document.querySelectorAll('.stat-number');
-    if (statNumbers.length === 0) {
-        console.log('Stat numbers not found');
-        return;
-    }
-    
-    console.log('Found', statNumbers.length, 'stat numbers');
+    const statNumbers = document.querySelectorAll('.stat-number[data-target]');
+    if (statNumbers.length === 0) return;
     
     let hasAnimated = false;
     
-    // Store original numbers and text
-    const originalData = [];
-    statNumbers.forEach((stat) => {
-        const text = stat.textContent.trim();
-        const number = parseInt(text.replace(/\D/g, ''));
-        const suffix = text.replace(/\d/g, '') || '+';
-        originalData.push({ number, suffix, originalText: text });
-        
-        console.log('Stat:', number, suffix);
-        
-        // Store original text as data attribute
-        stat.setAttribute('data-original', text);
-    });
-    
     // Function to start counter animation
     const startCounterAnimation = () => {
-        if (hasAnimated) {
-            console.log('Already animated');
-            return;
-        }
+        if (hasAnimated) return;
         hasAnimated = true;
-        console.log('Starting counter animation');
         
-        // Reset all numbers to 0 first
+        // Animate each counter with stagger
         statNumbers.forEach((stat, index) => {
-            const suffix = originalData[index].suffix;
-            stat.textContent = '0' + suffix;
+            const target = parseInt(stat.getAttribute('data-target'));
+            if (target && target > 0) {
+                setTimeout(() => {
+                    animateCounter(stat, target, 2000);
+                }, index * 200);
+            }
         });
-        
-        // Animate counters with stagger - start after a short delay
-        setTimeout(() => {
-            statNumbers.forEach((stat, index) => {
-                const number = originalData[index].number;
-                if (number && number > 0) {
-                    setTimeout(() => {
-                        console.log('Animating counter:', number);
-                        animateCounter(stat, number, 2500);
-                    }, index * 250);
-                }
-            });
-        }, 300);
     };
     
-    // Add fade-up animation to stats
-    statNumbers.forEach((stat, index) => {
-        stat.parentElement.classList.add('animate-fade-up');
-        stat.parentElement.classList.add(`stagger-${(index % 4) + 1}`);
-        animationObserver.observe(stat.parentElement);
-    });
-    
-    // Observer for counter animation - very sensitive
+    // Intersection Observer - triggers when stats section enters viewport
     const statsObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
-            console.log('Stats observer triggered, intersecting:', entry.isIntersecting);
             if (entry.isIntersecting && !hasAnimated) {
                 startCounterAnimation();
             }
         });
     }, { 
-        threshold: 0.01, // Very very low threshold
-        rootMargin: '0px 0px 0px 0px' // No margin, trigger immediately
+        threshold: 0.3, // Trigger when 30% visible
+        rootMargin: '0px 0px -100px 0px' // Start 100px before entering viewport
     });
     
     statsObserver.observe(statsSection);
     
-    // Also check if stats are already visible on load - DIRECT CHECK
-    const checkStatsVisible = () => {
+    // Also check on scroll for immediate trigger
+    const checkVisibility = () => {
+        if (hasAnimated) return;
+        
         const rect = statsSection.getBoundingClientRect();
-        const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
-        console.log('Checking stats visibility:', isVisible, 'top:', rect.top, 'bottom:', rect.bottom);
-        if (isVisible && !hasAnimated) {
-            console.log('Stats visible, starting animation');
+        const isVisible = rect.top < window.innerHeight - 100 && rect.bottom > 100;
+        
+        if (isVisible) {
             startCounterAnimation();
         }
     };
     
-    // Check multiple times to ensure it works
-    setTimeout(checkStatsVisible, 100);
-    setTimeout(checkStatsVisible, 500);
-    setTimeout(checkStatsVisible, 1000);
-    setTimeout(checkStatsVisible, 2000);
+    // Check on scroll
+    window.addEventListener('scroll', checkVisibility, { passive: true });
     
-    // Also check on scroll
-    window.addEventListener('scroll', checkStatsVisible, { passive: true });
-    
-    // Force check on window load
-    window.addEventListener('load', () => {
-        setTimeout(checkStatsVisible, 500);
-    });
+    // Check immediately and after delays
+    setTimeout(checkVisibility, 500);
+    setTimeout(checkVisibility, 1000);
+    window.addEventListener('load', checkVisibility);
 }
 
-// Initialize stats counter when DOM is ready
+// Initialize when DOM is ready
 if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => {
-        setTimeout(initStatsCounter, 100);
-    });
+    document.addEventListener('DOMContentLoaded', initStatsCounter);
 } else {
-    setTimeout(initStatsCounter, 100);
+    initStatsCounter();
 }
 
 // Enhanced parallax effect for hero section with smooth scrolling
