@@ -1975,11 +1975,12 @@ html {
         transition: all 0.3s ease;
         gap: 1.5rem;
         z-index: 1001;
-        justify-content: center;
+        justify-content: flex-start;
         align-items: center;
         animation: menuSlideFromLeft 0.4s ease-out;
         box-shadow: 0 0 30px rgba(0, 0, 0, 0.1);
-        overflow: hidden;
+        overflow-y: auto;
+        overflow-x: hidden;
     }
 
     .nav-menu.active .nav-link {
