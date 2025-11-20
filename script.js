@@ -1,34 +1,102 @@
-// Mobile Menu Toggle with animation
+// Mobile Menu Toggle with enhanced animations
 const menuToggle = document.querySelector('.menu-toggle');
 const navMenu = document.querySelector('.nav-menu');
 const navLinks = document.querySelectorAll('.nav-link');
+let isMenuOpen = false;
 
-menuToggle.addEventListener('click', () => {
+// Add haptic feedback for mobile devices
+function addHapticFeedback() {
+    if (navigator.vibrate) {
+        navigator.vibrate(50);
+    }
+}
+
+// Enhanced menu toggle with better animations
+menuToggle.addEventListener('click', (e) => {
+    e.preventDefault();
+    addHapticFeedback();
+    
+    isMenuOpen = !isMenuOpen;
     navMenu.classList.toggle('active');
     menuToggle.classList.toggle('active');
     
-    // Animate nav links when menu opens
-    if (navMenu.classList.contains('active')) {
-        navLinks.forEach((link, index) => {
-            setTimeout(() => {
-                link.style.opacity = '0';
-                link.style.transform = 'translateY(-10px)';
-                setTimeout(() => {
-                    link.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
-                    link.style.opacity = '1';
-                    link.style.transform = 'translateY(0)';
-                }, 50);
-            }, index * 50);
-        });
+    // Prevent body scroll when menu is open
+    if (isMenuOpen) {
+        document.body.style.overflow = 'hidden';
+        // Add entrance animation
+        setTimeout(() => {
+            navLinks.forEach((link, index) => {
+                link.style.animationDelay = `${index * 0.05}s`;
+            });
+        }, 100);
+    } else {
+        document.body.style.overflow = '';
     }
 });
 
 // Close mobile menu when clicking on a link
-navLinks.forEach(link => {
-    link.addEventListener('click', () => {
+navLinks.forEach((link, index) => {
+    link.addEventListener('click', (e) => {
+        // Add click animation
+        link.style.transform = 'scale(0.95)';
+        setTimeout(() => {
+            link.style.transform = '';
+        }, 150);
+        
+        // Close menu after a short delay for better UX
+        setTimeout(() => {
+            navMenu.classList.remove('active');
+            menuToggle.classList.remove('active');
+            document.body.style.overflow = '';
+            isMenuOpen = false;
+        }, 200);
+    });
+});
+
+// Close menu when clicking outside or on close button
+document.addEventListener('click', (e) => {
+    // Check if clicked on the close button (::after pseudo-element area)
+    const rect = navMenu.getBoundingClientRect();
+    const closeButtonArea = {
+        x: rect.right - 60,
+        y: rect.top + 20,
+        width: 40,
+        height: 40
+    };
+    
+    const isCloseButtonClick = isMenuOpen && 
+        e.clientX >= closeButtonArea.x && 
+        e.clientX <= closeButtonArea.x + closeButtonArea.width &&
+        e.clientY >= closeButtonArea.y && 
+        e.clientY <= closeButtonArea.y + closeButtonArea.height;
+    
+    if (isCloseButtonClick || (isMenuOpen && !navMenu.contains(e.target) && !menuToggle.contains(e.target))) {
         navMenu.classList.remove('active');
         menuToggle.classList.remove('active');
-    });
+        document.body.style.overflow = '';
+        isMenuOpen = false;
+        addHapticFeedback();
+    }
+});
+
+// Close menu on escape key
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && isMenuOpen) {
+        navMenu.classList.remove('active');
+        menuToggle.classList.remove('active');
+        document.body.style.overflow = '';
+        isMenuOpen = false;
+    }
+});
+
+// Handle window resize
+window.addEventListener('resize', () => {
+    if (window.innerWidth > 768 && isMenuOpen) {
+        navMenu.classList.remove('active');
+        menuToggle.classList.remove('active');
+        document.body.style.overflow = '';
+        isMenuOpen = false;
+    }
 });
 
 // Navbar scroll effect
