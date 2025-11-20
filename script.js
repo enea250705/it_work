@@ -470,11 +470,11 @@ window.addEventListener('scroll', () => {
 }, { passive: true });
 
 // Enhanced contact form handling with animations
-const contactForm = document.getElementById('contactForm');
+const contactFormElement = document.getElementById('contactForm');
 
-if (contactForm) {
+if (contactFormElement) {
     // Add focus animations to form inputs
-    const formInputs = contactForm.querySelectorAll('input, textarea');
+    const formInputs = contactFormElement.querySelectorAll('input, textarea');
     formInputs.forEach(input => {
         input.addEventListener('focus', function() {
             this.parentElement.classList.add('focused');
@@ -492,10 +492,10 @@ if (contactForm) {
         }
     });
     
-    contactForm.addEventListener('submit', (e) => {
+    contactFormElement.addEventListener('submit', (e) => {
         e.preventDefault();
         
-        const submitButton = contactForm.querySelector('button[type="submit"]');
+        const submitButton = contactFormElement.querySelector('button[type="submit"]');
         const originalText = submitButton.textContent;
         
         // Animate button
@@ -526,7 +526,7 @@ if (contactForm) {
                 alert('Grazie per il tuo messaggio! Ti risponderemo il prima possibile.');
                 
                 // Reset form and button
-                contactForm.reset();
+                contactFormElement.reset();
                 submitButton.textContent = originalText;
                 submitButton.disabled = false;
                 submitButton.style.background = '';
@@ -540,181 +540,208 @@ if (contactForm) {
     });
 }
 
-// Counter animation function - SIMPLIFIED AND ROBUST
-const animateCounter = (element, target, duration = 2000) => {
-    if (!element) {
-        console.error('Element is null');
-        return;
+// SENIOR-LEVEL COUNTER ANIMATION SYSTEM
+class CounterAnimator {
+    constructor() {
+        this.animatedCounters = new Set();
+        this.observers = new Map();
+        this.isInitialized = false;
     }
-    if (!target || target <= 0) {
-        console.error('Invalid target:', target);
-        return;
-    }
-    
-    console.log('animateCounter called with target:', target);
-    
-    let start = 0;
-    const startTime = performance.now();
-    const suffix = '+';
-    
-    const easeOutCubic = (t) => {
-        return 1 - Math.pow(1 - t, 3);
-    };
-    
-    const updateCounter = (currentTime) => {
-        const elapsed = currentTime - startTime;
-        const progress = Math.min(elapsed / duration, 1);
-        const easedProgress = easeOutCubic(progress);
-        
-        const currentValue = Math.floor(target * easedProgress);
-        
-        if (element && element.textContent !== undefined) {
-            element.textContent = currentValue + suffix;
-        }
-        
-        if (progress < 1) {
-            requestAnimationFrame(updateCounter);
-        } else {
-            if (element && element.textContent !== undefined) {
-                element.textContent = target + suffix;
-            }
-            console.log('Counter animation completed for target:', target);
-        }
-    };
-    
-    requestAnimationFrame(updateCounter);
-};
 
-// Counter animation - FIXED VERSION
-function initStatsCounter() {
-    console.log('Initializing stats counter...');
-    
-    const statsSection = document.querySelector('.stats');
-    if (!statsSection) {
-        console.log('Stats section not found!');
-        return;
+    // Robust counter animation with proper easing
+    animateCounter(element, target, suffix = '', duration = 2000) {
+        if (!element || !target || target <= 0) {
+            console.error('Invalid counter parameters:', { element, target, suffix });
+            return Promise.reject('Invalid parameters');
+        }
+
+        return new Promise((resolve) => {
+            const startTime = performance.now();
+            const easeOutQuart = t => 1 - Math.pow(1 - t, 4);
+            
+            const animate = (currentTime) => {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                const easedProgress = easeOutQuart(progress);
+                
+                const currentValue = Math.floor(target * easedProgress);
+                element.textContent = currentValue + suffix;
+                
+                if (progress < 1) {
+                    requestAnimationFrame(animate);
+                } else {
+                    element.textContent = target + suffix;
+                    resolve(target);
+                }
+            };
+            
+            requestAnimationFrame(animate);
+        });
     }
-    console.log('Stats section found');
-    
-    const statNumbers = document.querySelectorAll('.stat-number[data-target]');
-    if (statNumbers.length === 0) {
-        console.log('No stat numbers with data-target found!');
-        // Try without data-target selector
-        const allStats = document.querySelectorAll('.stat-number');
-        console.log('Found', allStats.length, 'stat numbers total');
-        return;
-    }
-    console.log('Found', statNumbers.length, 'stat numbers with data-target');
-    
-    let hasAnimated = false;
-    
-    // Function to start counter animation
-    const startCounterAnimation = () => {
-        if (hasAnimated) {
-            console.log('Already animated, skipping');
+
+    // Initialize counter for a specific element
+    initializeCounter(element) {
+        const target = parseInt(element.getAttribute('data-target'));
+        const suffix = element.getAttribute('data-suffix') || '';
+        
+        if (!target || target <= 0) {
+            console.warn('Invalid target for counter:', element);
             return;
         }
-        hasAnimated = true;
-        console.log('Starting counter animation!');
-        
-        // Animate each counter with stagger
-        statNumbers.forEach((stat, index) => {
-            const target = parseInt(stat.getAttribute('data-target'));
-            console.log('Stat', index, 'target:', target);
-            if (target && target > 0) {
-                setTimeout(() => {
-                    console.log('Animating stat', index, 'to', target);
-                    animateCounter(stat, target, 2000);
-                }, index * 200);
-            }
-        });
-    };
-    
-    // Intersection Observer - triggers when stats section enters viewport
-    const statsObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            console.log('Stats observer triggered, intersecting:', entry.isIntersecting, 'ratio:', entry.intersectionRatio);
-            if (entry.isIntersecting && !hasAnimated) {
-                console.log('Stats visible, starting animation');
-                startCounterAnimation();
-            }
-        });
-    }, { 
-        threshold: 0.1, // Lower threshold
-        rootMargin: '0px 0px -50px 0px'
-    });
-    
-    statsObserver.observe(statsSection);
-    console.log('Stats observer set up');
-    
-    // Also check on scroll for immediate trigger
-    const checkVisibility = () => {
-        if (hasAnimated) return;
-        
-        const rect = statsSection.getBoundingClientRect();
-        const isVisible = rect.top < window.innerHeight - 50 && rect.bottom > 50;
-        
-        console.log('Checking visibility - top:', rect.top, 'bottom:', rect.bottom, 'window height:', window.innerHeight, 'visible:', isVisible);
-        
-        if (isVisible) {
-            console.log('Stats visible via scroll check, starting animation');
-            startCounterAnimation();
-        }
-    };
-    
-    // Check on scroll
-    window.addEventListener('scroll', checkVisibility, { passive: true });
-    
-    // Check immediately and after delays
-    setTimeout(checkVisibility, 100);
-    setTimeout(checkVisibility, 500);
-    setTimeout(checkVisibility, 1000);
-    window.addEventListener('load', () => {
-        setTimeout(checkVisibility, 500);
-    });
-}
 
-// Initialize when DOM is ready - ensure it runs MULTIPLE TIMES
-(function() {
-    // Try immediately
-    setTimeout(initStatsCounter, 100);
-    
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', () => {
-            setTimeout(initStatsCounter, 200);
-        });
-    } else {
-        setTimeout(initStatsCounter, 200);
-    }
-    
-    // Also try after window load
-    window.addEventListener('load', () => {
-        setTimeout(initStatsCounter, 500);
-        setTimeout(initStatsCounter, 1000);
-    });
-    
-    // Last resort - try after 2 seconds
-    setTimeout(initStatsCounter, 2000);
-    
-    // TEST: Force animation after 3 seconds to test if function works
-    setTimeout(() => {
-        console.log('TEST: Forcing counter animation after 3 seconds');
-        const testStats = document.querySelectorAll('.stat-number[data-target]');
-        if (testStats.length > 0) {
-            console.log('TEST: Found', testStats.length, 'stats, forcing animation');
-            testStats.forEach((stat, index) => {
-                const target = parseInt(stat.getAttribute('data-target'));
-                if (target) {
+        // Set initial state
+        element.textContent = '0' + suffix;
+        
+        // Create intersection observer for this element
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && !this.animatedCounters.has(element)) {
+                    this.animatedCounters.add(element);
+                    
+                    // Add staggered delay based on element position
+                    const delay = Array.from(element.parentElement.children).indexOf(element) * 150;
+                    
                     setTimeout(() => {
-                        console.log('TEST: Animating', target);
-                        animateCounter(stat, target, 2000);
-                    }, index * 200);
+                        this.animateCounter(element, target, suffix, 2000)
+                            .then(() => console.log(`Counter animated: ${target}${suffix}`))
+                            .catch(err => console.error('Counter animation failed:', err));
+                    }, delay);
+                    
+                    // Disconnect observer after animation starts
+                    observer.disconnect();
                 }
             });
-        } else {
-            console.log('TEST: No stats found!');
+        }, {
+            threshold: 0.1,
+            rootMargin: '50px 0px -50px 0px'
+        });
+
+        observer.observe(element);
+        this.observers.set(element, observer);
+    }
+
+    // Initialize all counters on the page
+    initializeAllCounters() {
+        if (this.isInitialized) {
+            console.log('Counters already initialized');
+            return;
         }
-    }, 3000);
+
+        const counters = document.querySelectorAll('.stat-number[data-target]');
+        console.log(`Found ${counters.length} counters to initialize`);
+
+        if (counters.length === 0) {
+            console.warn('No counters found with data-target attribute');
+            return;
+        }
+
+        counters.forEach(counter => {
+            this.initializeCounter(counter);
+        });
+
+        this.isInitialized = true;
+        console.log('All counters initialized successfully');
+    }
+
+    // Reset all counters (for testing)
+    reset() {
+        this.animatedCounters.clear();
+        this.observers.forEach(observer => observer.disconnect());
+        this.observers.clear();
+        this.isInitialized = false;
+        
+        // Reset counter display
+        document.querySelectorAll('.stat-number[data-target]').forEach(counter => {
+            const suffix = counter.getAttribute('data-suffix') || '';
+            counter.textContent = '0' + suffix;
+        });
+    }
+}
+
+// Create global counter animator instance
+const counterAnimator = new CounterAnimator();
+
+// SENIOR-LEVEL COUNTER INITIALIZATION
+function initializeCounters() {
+    console.log('🚀 Initializing counter animation system...');
+    
+    // Wait for DOM to be fully ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => counterAnimator.initializeAllCounters(), 100);
+        });
+    } else {
+        // DOM is already ready
+        setTimeout(() => counterAnimator.initializeAllCounters(), 100);
+    }
+    
+    // Also initialize after window load as fallback
+    window.addEventListener('load', () => {
+        setTimeout(() => {
+            if (!counterAnimator.isInitialized) {
+                console.log('🔄 Fallback initialization after window load');
+                counterAnimator.initializeAllCounters();
+            }
+        }, 200);
+    });
+    
+    // Debug helper - expose to global scope for testing
+    window.debugCounters = () => {
+        console.log('🔍 Counter Debug Info:');
+        console.log('- Initialized:', counterAnimator.isInitialized);
+        console.log('- Animated counters:', counterAnimator.animatedCounters.size);
+        console.log('- Active observers:', counterAnimator.observers.size);
+        
+        const counters = document.querySelectorAll('.stat-number[data-target]');
+        console.log('- Total counters found:', counters.length);
+        counters.forEach((counter, i) => {
+            console.log(`  Counter ${i}:`, {
+                target: counter.getAttribute('data-target'),
+                suffix: counter.getAttribute('data-suffix'),
+                current: counter.textContent,
+                visible: counter.getBoundingClientRect().top < window.innerHeight
+            });
+        });
+    };
+    
+    // Reset function for testing
+    window.resetCounters = () => {
+        console.log('🔄 Resetting all counters');
+        counterAnimator.reset();
+        setTimeout(() => counterAnimator.initializeAllCounters(), 100);
+    };
+}
+
+// INITIALIZE EVERYTHING WHEN DOM IS READY
+(function() {
+    console.log('🎯 Starting application initialization...');
+    
+    // Initialize counter system
+    initializeCounters();
+    
+    // Initialize other animations and features
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initializeApp);
+    } else {
+        initializeApp();
+    }
+    
+    function initializeApp() {
+        console.log('✅ Application initialized');
+        
+        // Test counters after 3 seconds if they haven't animated
+        setTimeout(() => {
+            const counters = document.querySelectorAll('.stat-number[data-target]');
+            const hasAnimated = Array.from(counters).some(counter => 
+                parseInt(counter.textContent) > 0
+            );
+            
+            if (!hasAnimated && counters.length > 0) {
+                console.log('⚠️ Counters not animated after 3s, forcing initialization');
+                window.resetCounters();
+            }
+        }, 3000);
+    }
 })();
 
 // Enhanced parallax effect for hero section with smooth scrolling
