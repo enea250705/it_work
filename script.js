@@ -1,0 +1,790 @@
+// Mobile Menu Toggle with animation
+const menuToggle = document.querySelector('.menu-toggle');
+const navMenu = document.querySelector('.nav-menu');
+const navLinks = document.querySelectorAll('.nav-link');
+
+menuToggle.addEventListener('click', () => {
+    navMenu.classList.toggle('active');
+    menuToggle.classList.toggle('active');
+    
+    // Animate nav links when menu opens
+    if (navMenu.classList.contains('active')) {
+        navLinks.forEach((link, index) => {
+            setTimeout(() => {
+                link.style.opacity = '0';
+                link.style.transform = 'translateY(-10px)';
+                setTimeout(() => {
+                    link.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+                    link.style.opacity = '1';
+                    link.style.transform = 'translateY(0)';
+                }, 50);
+            }, index * 50);
+        });
+    }
+});
+
+// Close mobile menu when clicking on a link
+navLinks.forEach(link => {
+    link.addEventListener('click', () => {
+        navMenu.classList.remove('active');
+        menuToggle.classList.remove('active');
+    });
+});
+
+// Navbar scroll effect
+const navbar = document.querySelector('.navbar');
+let lastScroll = 0;
+
+window.addEventListener('scroll', () => {
+    const currentScroll = window.pageYOffset;
+    
+    if (currentScroll > 100) {
+        navbar.classList.add('scrolled');
+    } else {
+        navbar.classList.remove('scrolled');
+    }
+    
+    lastScroll = currentScroll;
+});
+
+// Smooth scrolling for anchor links
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        
+        if (target) {
+            const offsetTop = target.offsetTop - 80;
+            window.scrollTo({
+                top: offsetTop,
+                behavior: 'smooth'
+            });
+        }
+    });
+});
+
+// Enhanced Intersection Observer for Wix-style animations with better scroll detection
+const observerOptions = {
+    threshold: 0.1, // Trigger when 10% visible (more sensitive)
+    rootMargin: '0px 0px -50px 0px' // Start animation 50px before element enters viewport
+};
+
+const animationObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            // Add visible class with a small delay for smoother animation
+            setTimeout(() => {
+                entry.target.classList.add('animate-visible');
+            }, 50);
+            // Don't observe again after animation
+            animationObserver.unobserve(entry.target);
+        }
+    });
+}, observerOptions);
+
+// More aggressive observer for elements that should animate immediately
+const immediateObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('animate-visible');
+            immediateObserver.unobserve(entry.target);
+        }
+    });
+}, {
+    threshold: 0.05,
+    rootMargin: '0px'
+});
+
+// Animate service cards with stagger effect - enhanced for scroll
+document.querySelectorAll('.service-card').forEach((card, index) => {
+    card.classList.add('animate-fade-up');
+    card.classList.add(`stagger-${(index % 6) + 1}`);
+    // Observe each card individually for better scroll detection
+    animationObserver.observe(card);
+    
+    // Also animate card children
+    const cardTitle = card.querySelector('.service-title');
+    const cardDesc = card.querySelector('.service-description');
+    const cardIcon = card.querySelector('.service-icon');
+    
+    if (cardTitle) {
+        cardTitle.classList.add('animate-fade-down');
+        animationObserver.observe(cardTitle);
+    }
+    if (cardDesc) {
+        cardDesc.classList.add('animate-fade-up');
+        animationObserver.observe(cardDesc);
+    }
+    if (cardIcon) {
+        cardIcon.classList.add('animate-fade-scale');
+        animationObserver.observe(cardIcon);
+    }
+});
+
+// Animate about section with fade-left - ensure it's visible
+const aboutSection = document.querySelector('.about-content');
+if (aboutSection) {
+    aboutSection.classList.add('animate-fade-left');
+    animationObserver.observe(aboutSection);
+    immediateObserver.observe(aboutSection); // Also use immediate observer
+}
+
+// Animate about text with fade-right
+const aboutText = document.querySelector('.about-text');
+if (aboutText) {
+    aboutText.classList.add('animate-fade-right');
+    animationObserver.observe(aboutText);
+    
+    // Animate about descriptions
+    const descriptions = aboutText.querySelectorAll('.about-description');
+    descriptions.forEach((desc, index) => {
+        desc.classList.add('animate-fade-up');
+        desc.classList.add(`stagger-${index + 1}`);
+        animationObserver.observe(desc);
+    });
+}
+
+// Animate about image with fade-scale
+const aboutImage = document.querySelector('.about-image');
+if (aboutImage) {
+    aboutImage.classList.add('animate-fade-scale');
+    animationObserver.observe(aboutImage);
+}
+
+// Animate section headers with more visibility
+document.querySelectorAll('.section-header').forEach((header, index) => {
+    header.classList.add('animate-fade-down');
+    header.classList.add(`stagger-${(index % 3) + 1}`);
+    animationObserver.observe(header);
+    
+    // Also animate title and subtitle separately
+    const title = header.querySelector('.section-title');
+    const subtitle = header.querySelector('.section-subtitle');
+    
+    if (title) {
+        title.classList.add('animate-fade-down');
+        title.classList.add(`stagger-${(index % 3) + 1}`);
+        animationObserver.observe(title);
+    }
+    if (subtitle) {
+        subtitle.classList.add('animate-fade-up');
+        subtitle.classList.add(`stagger-${(index % 3) + 2}`);
+        animationObserver.observe(subtitle);
+    }
+});
+
+// Animate value cards
+document.querySelectorAll('.value-card').forEach((card, index) => {
+    card.classList.add('animate-fade-up');
+    card.classList.add(`stagger-${(index % 4) + 1}`);
+    animationObserver.observe(card);
+});
+
+// Animate contact info items
+document.querySelectorAll('.info-item').forEach((item, index) => {
+    item.classList.add('animate-fade-left');
+    item.classList.add(`stagger-${(index % 4) + 1}`);
+    animationObserver.observe(item);
+});
+
+// Animate contact form
+const contactForm = document.querySelector('.contact-form');
+if (contactForm) {
+    contactForm.classList.add('animate-fade-right');
+    animationObserver.observe(contactForm);
+}
+
+// Animate page headers
+document.querySelectorAll('.page-header').forEach(header => {
+    header.classList.add('animate-fade-down');
+    animationObserver.observe(header);
+});
+
+// Animate page title and subtitle separately
+document.querySelectorAll('.page-title').forEach((title, index) => {
+    title.classList.add('animate-fade-down');
+    title.classList.add(`stagger-${(index % 3) + 1}`);
+    animationObserver.observe(title);
+});
+
+document.querySelectorAll('.page-subtitle').forEach((subtitle, index) => {
+    subtitle.classList.add('animate-fade-up');
+    subtitle.classList.add(`stagger-${(index % 3) + 2}`);
+    animationObserver.observe(subtitle);
+});
+
+// Animate footer sections
+document.querySelectorAll('.footer-section').forEach((section, index) => {
+    section.classList.add('animate-fade-up');
+    section.classList.add(`stagger-${(index % 4) + 1}`);
+    animationObserver.observe(section);
+});
+
+// Animate footer bottom
+const footerBottom = document.querySelector('.footer-bottom');
+if (footerBottom) {
+    footerBottom.classList.add('animate-fade-up');
+    animationObserver.observe(footerBottom);
+}
+
+// Animate CTA sections with children
+document.querySelectorAll('.cta-section').forEach(cta => {
+    cta.classList.add('animate-fade-scale');
+    animationObserver.observe(cta);
+    
+    // Animate CTA title and text separately
+    const ctaTitle = cta.querySelector('.cta-title');
+    const ctaText = cta.querySelector('.cta-text');
+    const ctaButton = cta.querySelector('.btn');
+    
+    if (ctaTitle) {
+        ctaTitle.classList.add('animate-fade-down');
+        animationObserver.observe(ctaTitle);
+    }
+    if (ctaText) {
+        ctaText.classList.add('animate-fade-up');
+        animationObserver.observe(ctaText);
+    }
+    if (ctaButton) {
+        ctaButton.classList.add('animate-fade-scale');
+        animationObserver.observe(ctaButton);
+    }
+});
+
+// Animate map section
+const mapSection = document.querySelector('.map-section');
+if (mapSection) {
+    mapSection.classList.add('animate-fade-up');
+    animationObserver.observe(mapSection);
+    
+    const mapPlaceholder = mapSection.querySelector('.map-placeholder');
+    if (mapPlaceholder) {
+        mapPlaceholder.classList.add('animate-fade-scale');
+        animationObserver.observe(mapPlaceholder);
+    }
+}
+
+// Animate ALL sections with fade-in - ensure services and about sections animate
+document.querySelectorAll('section:not(.hero):not(.page-header)').forEach((section, index) => {
+    // Add animation class to section
+    section.classList.add('animate-fade-up');
+    section.classList.add(`stagger-${(index % 6) + 1}`);
+    animationObserver.observe(section);
+    
+    // Also observe with immediate observer for better detection
+    immediateObserver.observe(section);
+    
+    // Specifically handle services and about sections
+    if (section.classList.contains('services') || section.classList.contains('about')) {
+        // Force animation on these sections
+        const sectionObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate-visible');
+                    sectionObserver.unobserve(entry.target);
+                }
+            });
+        }, {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        });
+        sectionObserver.observe(section);
+    }
+});
+
+// Animate all paragraphs and text elements with scroll
+document.querySelectorAll('p:not(.hero-subtitle):not(.page-subtitle):not(.cta-text):not(.footer-text)').forEach((p, index) => {
+    if (!p.closest('.service-card') && !p.closest('.value-card') && !p.closest('.footer')) {
+        p.classList.add('animate-fade-up');
+        p.classList.add(`stagger-${(index % 5) + 1}`);
+        animationObserver.observe(p);
+    }
+});
+
+// Animate all headings (h2, h3, h4) that aren't already animated
+document.querySelectorAll('h2:not(.section-title):not(.page-title), h3:not(.service-title):not(.value-title):not(.cta-title), h4:not(.footer-heading)').forEach((heading, index) => {
+    if (!heading.closest('.service-card') && !heading.closest('.value-card') && !heading.closest('.info-content') && !heading.closest('.footer')) {
+        heading.classList.add('animate-fade-down');
+        heading.classList.add(`stagger-${(index % 4) + 1}`);
+        animationObserver.observe(heading);
+    }
+});
+
+// Animate info content headings
+document.querySelectorAll('.info-content h4').forEach((heading, index) => {
+    heading.classList.add('animate-fade-right');
+    heading.classList.add(`stagger-${(index % 3) + 1}`);
+    animationObserver.observe(heading);
+});
+
+// Animate info content paragraphs
+document.querySelectorAll('.info-content p').forEach((p, index) => {
+    p.classList.add('animate-fade-left');
+    p.classList.add(`stagger-${(index % 3) + 2}`);
+    animationObserver.observe(p);
+});
+
+// Animate all images and placeholders
+document.querySelectorAll('.image-placeholder, .map-placeholder').forEach((img, index) => {
+    img.classList.add('animate-fade-scale');
+    img.classList.add(`stagger-${(index % 3) + 1}`);
+    animationObserver.observe(img);
+});
+
+// Animate all buttons that aren't in hero
+document.querySelectorAll('.btn:not(.hero-buttons .btn)').forEach((btn, index) => {
+    btn.classList.add('animate-fade-up');
+    btn.classList.add(`stagger-${(index % 4) + 1}`);
+    animationObserver.observe(btn);
+});
+
+// Animate all lists
+document.querySelectorAll('ul:not(.nav-menu):not(.footer-links), ol').forEach((list, index) => {
+    list.classList.add('animate-fade-left');
+    list.classList.add(`stagger-${(index % 3) + 1}`);
+    animationObserver.observe(list);
+    
+    // Animate list items individually
+    list.querySelectorAll('li').forEach((li, liIndex) => {
+        li.classList.add('animate-fade-up');
+        li.classList.add(`stagger-${(liIndex % 5) + 1}`);
+        animationObserver.observe(li);
+    });
+});
+
+// Animate all containers and wrappers
+document.querySelectorAll('.container, .wrapper, .content').forEach((container, index) => {
+    if (!container.closest('.hero') && !container.closest('.navbar')) {
+        container.classList.add('animate-fade-up');
+        container.classList.add(`stagger-${(index % 4) + 1}`);
+        animationObserver.observe(container);
+    }
+});
+
+// Animate service features list items individually
+document.querySelectorAll('.service-features li').forEach((li, index) => {
+    li.classList.add('animate-fade-left');
+    li.classList.add(`stagger-${(index % 4) + 1}`);
+    animationObserver.observe(li);
+});
+
+// Animate stats items individually
+document.querySelectorAll('.stat-item').forEach((stat, index) => {
+    stat.classList.add('animate-fade-up');
+    stat.classList.add(`stagger-${(index % 4) + 1}`);
+    animationObserver.observe(stat);
+});
+
+// Animate technology items
+document.querySelectorAll('.tech-item').forEach((tech, index) => {
+    tech.classList.add('animate-fade-scale');
+    tech.classList.add(`stagger-${(index % 8) + 1}`);
+    animationObserver.observe(tech);
+});
+
+// Initialize all animations on page load - ensure visible elements are shown immediately
+document.addEventListener('DOMContentLoaded', () => {
+    // Immediately show elements that are already in viewport
+    const checkVisibleElements = () => {
+        document.querySelectorAll('.animate-fade-up, .animate-fade-down, .animate-fade-left, .animate-fade-right, .animate-fade-scale').forEach((el) => {
+            const rect = el.getBoundingClientRect();
+            const isVisible = rect.top < window.innerHeight + 200 && rect.bottom > -200;
+            
+            if (isVisible && !el.classList.contains('animate-visible')) {
+                // Element is already visible, animate immediately
+                el.classList.add('animate-visible');
+            }
+        });
+    };
+    
+    // Check immediately
+    checkVisibleElements();
+    
+    // Check again after a short delay
+    setTimeout(checkVisibleElements, 100);
+    setTimeout(checkVisibleElements, 500);
+    
+    // Also check on scroll
+    window.addEventListener('scroll', checkVisibleElements, { passive: true });
+});
+
+// Enhanced scroll-triggered animations
+const scrollAnimations = () => {
+    const elements = document.querySelectorAll('.animate-fade-up, .animate-fade-down, .animate-fade-left, .animate-fade-right, .animate-fade-scale');
+    
+    elements.forEach((element) => {
+        const elementTop = element.getBoundingClientRect().top;
+        const elementVisible = 100;
+        
+        if (elementTop < window.innerHeight - elementVisible && !element.classList.contains('animate-visible')) {
+            element.classList.add('animate-visible');
+        }
+    });
+};
+
+// Throttled scroll listener for better performance
+let scrollTimeout;
+window.addEventListener('scroll', () => {
+    if (scrollTimeout) {
+        window.cancelAnimationFrame(scrollTimeout);
+    }
+    
+    scrollTimeout = window.requestAnimationFrame(() => {
+        scrollAnimations();
+    });
+}, { passive: true });
+
+// Enhanced contact form handling with animations
+const contactForm = document.getElementById('contactForm');
+
+if (contactForm) {
+    // Add focus animations to form inputs
+    const formInputs = contactForm.querySelectorAll('input, textarea');
+    formInputs.forEach(input => {
+        input.addEventListener('focus', function() {
+            this.parentElement.classList.add('focused');
+        });
+        
+        input.addEventListener('blur', function() {
+            if (!this.value) {
+                this.parentElement.classList.remove('focused');
+            }
+        });
+        
+        // Check if input has value on load
+        if (input.value) {
+            input.parentElement.classList.add('focused');
+        }
+    });
+    
+    contactForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        
+        const submitButton = contactForm.querySelector('button[type="submit"]');
+        const originalText = submitButton.textContent;
+        
+        // Animate button
+        submitButton.style.transform = 'scale(0.95)';
+        submitButton.textContent = 'Invio in corso...';
+        submitButton.disabled = true;
+        
+        // Get form values
+        const formData = {
+            name: document.getElementById('name').value,
+            email: document.getElementById('email').value,
+            phone: document.getElementById('phone')?.value || '',
+            message: document.getElementById('message').value,
+            subject: document.getElementById('subject')?.value || ''
+        };
+        
+        // Simulate form submission
+        setTimeout(() => {
+            console.log('Form submitted:', formData);
+            
+            // Show success animation
+            submitButton.style.transform = 'scale(1)';
+            submitButton.textContent = '✓ Invio Completato!';
+            submitButton.style.background = '#4caf50';
+            
+            // Show success message
+            setTimeout(() => {
+                alert('Grazie per il tuo messaggio! Ti risponderemo il prima possibile.');
+                
+                // Reset form and button
+                contactForm.reset();
+                submitButton.textContent = originalText;
+                submitButton.disabled = false;
+                submitButton.style.background = '';
+                
+                // Remove focused class from all inputs
+                formInputs.forEach(input => {
+                    input.parentElement.classList.remove('focused');
+                });
+            }, 1000);
+        }, 1500);
+    });
+}
+
+// Enhanced counter animation with easing - improved version
+const animateCounter = (element, target, duration = 2000) => {
+    if (!element || !target || target <= 0) return;
+    
+    let start = 0;
+    const startTime = performance.now();
+    
+    // Get suffix (+ or other characters) from data attribute or current text
+    const originalText = element.getAttribute('data-original') || element.textContent || '';
+    const suffix = originalText.replace(/\d/g, '') || '+';
+    
+    const easeOutCubic = (t) => {
+        return 1 - Math.pow(1 - t, 3);
+    };
+    
+    const updateCounter = (currentTime) => {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const easedProgress = easeOutCubic(progress);
+        
+        start = target * easedProgress;
+        const currentValue = Math.floor(start);
+        
+        // Update text content
+        if (element && element.textContent !== undefined) {
+            element.textContent = currentValue + suffix;
+        }
+        
+        if (progress < 1) {
+            requestAnimationFrame(updateCounter);
+        } else {
+            // Ensure final value is set correctly
+            if (element && element.textContent !== undefined) {
+                element.textContent = target + suffix;
+            }
+        }
+    };
+    
+    requestAnimationFrame(updateCounter);
+};
+
+// Enhanced stats animation with stagger and counter animation - WORKING VERSION
+function initStatsCounter() {
+    const statsSection = document.querySelector('.stats');
+    if (!statsSection) {
+        console.log('Stats section not found');
+        return;
+    }
+    
+    const statNumbers = document.querySelectorAll('.stat-number');
+    if (statNumbers.length === 0) {
+        console.log('Stat numbers not found');
+        return;
+    }
+    
+    console.log('Found', statNumbers.length, 'stat numbers');
+    
+    let hasAnimated = false;
+    
+    // Store original numbers and text
+    const originalData = [];
+    statNumbers.forEach((stat) => {
+        const text = stat.textContent.trim();
+        const number = parseInt(text.replace(/\D/g, ''));
+        const suffix = text.replace(/\d/g, '') || '+';
+        originalData.push({ number, suffix, originalText: text });
+        
+        console.log('Stat:', number, suffix);
+        
+        // Store original text as data attribute
+        stat.setAttribute('data-original', text);
+    });
+    
+    // Function to start counter animation
+    const startCounterAnimation = () => {
+        if (hasAnimated) {
+            console.log('Already animated');
+            return;
+        }
+        hasAnimated = true;
+        console.log('Starting counter animation');
+        
+        // Reset all numbers to 0 first
+        statNumbers.forEach((stat, index) => {
+            const suffix = originalData[index].suffix;
+            stat.textContent = '0' + suffix;
+        });
+        
+        // Animate counters with stagger - start after a short delay
+        setTimeout(() => {
+            statNumbers.forEach((stat, index) => {
+                const number = originalData[index].number;
+                if (number && number > 0) {
+                    setTimeout(() => {
+                        console.log('Animating counter:', number);
+                        animateCounter(stat, number, 2500);
+                    }, index * 250);
+                }
+            });
+        }, 300);
+    };
+    
+    // Add fade-up animation to stats
+    statNumbers.forEach((stat, index) => {
+        stat.parentElement.classList.add('animate-fade-up');
+        stat.parentElement.classList.add(`stagger-${(index % 4) + 1}`);
+        animationObserver.observe(stat.parentElement);
+    });
+    
+    // Observer for counter animation - very sensitive
+    const statsObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            console.log('Stats observer triggered, intersecting:', entry.isIntersecting);
+            if (entry.isIntersecting && !hasAnimated) {
+                startCounterAnimation();
+            }
+        });
+    }, { 
+        threshold: 0.01, // Very very low threshold
+        rootMargin: '0px 0px 0px 0px' // No margin, trigger immediately
+    });
+    
+    statsObserver.observe(statsSection);
+    
+    // Also check if stats are already visible on load - DIRECT CHECK
+    const checkStatsVisible = () => {
+        const rect = statsSection.getBoundingClientRect();
+        const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
+        console.log('Checking stats visibility:', isVisible, 'top:', rect.top, 'bottom:', rect.bottom);
+        if (isVisible && !hasAnimated) {
+            console.log('Stats visible, starting animation');
+            startCounterAnimation();
+        }
+    };
+    
+    // Check multiple times to ensure it works
+    setTimeout(checkStatsVisible, 100);
+    setTimeout(checkStatsVisible, 500);
+    setTimeout(checkStatsVisible, 1000);
+    setTimeout(checkStatsVisible, 2000);
+    
+    // Also check on scroll
+    window.addEventListener('scroll', checkStatsVisible, { passive: true });
+    
+    // Force check on window load
+    window.addEventListener('load', () => {
+        setTimeout(checkStatsVisible, 500);
+    });
+}
+
+// Initialize stats counter when DOM is ready
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+        setTimeout(initStatsCounter, 100);
+    });
+} else {
+    setTimeout(initStatsCounter, 100);
+}
+
+// Enhanced parallax effect for hero section with smooth scrolling
+let ticking = false;
+let lastScrollY = 0;
+
+function updateParallax() {
+    const scrolled = window.pageYOffset;
+    const hero = document.querySelector('.hero');
+    const heroContent = document.querySelector('.hero-content');
+    const heroShapes = document.querySelectorAll('.hero-shapes .shape');
+    
+    if (hero && scrolled < window.innerHeight) {
+        // Parallax for hero background
+        hero.style.transform = `translateY(${scrolled * 0.5}px)`;
+        
+        // Parallax for hero content (slower)
+        if (heroContent) {
+            heroContent.style.transform = `translateY(${scrolled * 0.2}px)`;
+            heroContent.style.opacity = Math.max(0.5, 1 - (scrolled / window.innerHeight) * 0.5);
+        }
+        
+        // Parallax for shapes (different speeds)
+        heroShapes.forEach((shape, index) => {
+            const speed = 0.3 + (index * 0.1);
+            shape.style.transform = `translateY(${scrolled * speed}px) rotate(${scrolled * 0.1}deg)`;
+        });
+    }
+    
+    // Add scroll-based animations to elements
+    const scrollProgress = scrolled / (document.documentElement.scrollHeight - window.innerHeight);
+    
+    // Animate elements based on scroll position
+    document.querySelectorAll('.animate-on-scroll').forEach((element) => {
+        const elementTop = element.getBoundingClientRect().top;
+        const elementVisible = 150;
+        
+        if (elementTop < window.innerHeight - elementVisible) {
+            element.classList.add('animate-visible');
+        }
+    });
+    
+    lastScrollY = scrolled;
+    ticking = false;
+}
+
+window.addEventListener('scroll', () => {
+    if (!ticking) {
+        window.requestAnimationFrame(updateParallax);
+        ticking = true;
+    }
+}, { passive: true });
+
+// Smooth reveal animation for page load
+// Add loaded class immediately to ensure content is visible
+(function() {
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function() {
+            document.body.classList.add('loaded');
+        });
+    } else {
+        // DOM is already ready
+        document.body.classList.add('loaded');
+    }
+    
+    // Also add on window load as backup
+    window.addEventListener('load', function() {
+        document.body.classList.add('loaded');
+    });
+    
+    // Immediate fallback - add loaded class right away
+    setTimeout(function() {
+        document.body.classList.add('loaded');
+    }, 50);
+})();
+
+// Page transition effect
+document.addEventListener('DOMContentLoaded', () => {
+    // Add fade-in to main content
+    const mainContent = document.querySelector('main') || document.body;
+    mainContent.style.opacity = '0';
+    mainContent.style.transform = 'translateY(20px)';
+    mainContent.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+    
+    setTimeout(() => {
+        mainContent.style.opacity = '1';
+        mainContent.style.transform = 'translateY(0)';
+    }, 150);
+});
+
+// Set active nav link based on current page
+const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+navLinks.forEach(link => {
+    const linkHref = link.getAttribute('href');
+    if (linkHref === currentPage || (currentPage === '' && linkHref === 'index.html')) {
+        link.classList.add('active');
+    }
+});
+
+// Add active state to nav links based on scroll position (for single-page sections)
+const sections = document.querySelectorAll('section[id]');
+
+if (sections.length > 0) {
+    window.addEventListener('scroll', () => {
+        const scrollY = window.pageYOffset;
+        
+        sections.forEach(section => {
+            const sectionHeight = section.offsetHeight;
+            const sectionTop = section.offsetTop - 100;
+            const sectionId = section.getAttribute('id');
+            
+            if (scrollY > sectionTop && scrollY <= sectionTop + sectionHeight) {
+                navLinks.forEach(link => {
+                    const linkHref = link.getAttribute('href');
+                    if (linkHref.startsWith('#')) {
+                        link.classList.remove('active');
+                        if (linkHref === `#${sectionId}`) {
+                            link.classList.add('active');
+                        }
+                    }
+                });
+            }
+        });
+    });
+}
+
