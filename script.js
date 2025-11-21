@@ -223,10 +223,10 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     });
 });
 
-// Enhanced Intersection Observer for soft and beautiful animations
+// Enhanced Intersection Observer for Wix-style animations
 const observerOptions = {
-    threshold: 0.15, // Trigger when 15% visible for smoother feel
-    rootMargin: '0px 0px -100px 0px' // Start animation 100px before element enters viewport for earlier, softer appearance
+    threshold: 0.1, // Trigger when 10% visible (Wix-style)
+    rootMargin: '0px 0px -50px 0px' // Start animation 50px before element enters viewport
 };
 
 const animationObserver = new IntersectionObserver((entries) => {
@@ -578,19 +578,29 @@ document.querySelectorAll('.benefit-card').forEach((card, index) => {
 });
 
 // Automatic Scroll Animations for Images and Text - Works on ALL pages
-// Images slide in from left, text slides in from right
+// Images slide in from left, text slides in from right (Wix-style)
 function initializeScrollAnimations() {
-    // Find ALL images on the page (except those in hero or already animated)
-    document.querySelectorAll('img:not(.hero img):not(.navbar img):not(.footer img)').forEach((img, index) => {
-        // Skip if already has animation class
-        if (!img.classList.contains('animate-fade-left') && 
-            !img.classList.contains('animate-fade-right') &&
-            !img.classList.contains('animate-fade-up') &&
-            !img.classList.contains('animate-fade-down') &&
-            !img.classList.contains('animate-fade-scale')) {
+    // Find ALL images on the page (except those in hero/navbar/footer)
+    // Force images to fade from left - more aggressive detection
+    document.querySelectorAll('img').forEach((img, index) => {
+        // Skip hero, navbar, footer images
+        if (img.closest('.hero, .navbar, .footer')) {
+            return;
+        }
+        
+        // Skip if already has any animation class
+        const hasAnimation = img.classList.contains('animate-fade-left') || 
+                           img.classList.contains('animate-fade-right') ||
+                           img.classList.contains('animate-fade-up') ||
+                           img.classList.contains('animate-fade-down') ||
+                           img.classList.contains('animate-fade-scale');
+        
+        if (!hasAnimation) {
+            // Check if parent has animation (if so, skip to avoid double animation)
+            const parentHasAnimation = img.closest('.animate-fade-left, .animate-fade-right, .animate-fade-up, .animate-fade-down, .animate-fade-scale');
             
-            // Skip if image is in a container that already has animation
-            if (!img.closest('.animate-fade-left, .animate-fade-right, .animate-fade-up, .animate-fade-down, .animate-fade-scale')) {
+            if (!parentHasAnimation) {
+                // Force add fade-left animation to all images
                 img.classList.add('animate-fade-left');
                 img.classList.add(`stagger-${(index % 6) + 1}`);
                 animationObserver.observe(img);
@@ -699,8 +709,10 @@ function initializeScrollAnimations() {
 
 // Initialize all animations on page load - ensure visible elements are shown immediately
 document.addEventListener('DOMContentLoaded', () => {
-    // Initialize automatic scroll animations
-    initializeScrollAnimations();
+    // Initialize automatic scroll animations - run after a small delay to ensure DOM is ready
+    setTimeout(() => {
+        initializeScrollAnimations();
+    }, 100);
     
     // Immediately show elements that are already in viewport
     const checkVisibleElements = () => {
