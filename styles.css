@@ -2028,8 +2028,11 @@ html {
         margin-bottom: 0.3rem;
         opacity: 0;
         transform: translateX(-20px);
-        animation: linkSlideFromLeft 0.3s ease-out forwards;
         border-bottom: 1px solid #000000;
+    }
+
+    .nav-menu.active li {
+        animation: linkSlideFromLeft 0.3s ease-out forwards;
     }
 
     .nav-menu.active li:last-child {

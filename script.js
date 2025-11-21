@@ -8,29 +8,38 @@ let isMenuOpen = false;
 function toggleMenu() {
     isMenuOpen = !isMenuOpen;
     
-    navMenu.classList.toggle('active', isMenuOpen);
-    menuToggle.classList.toggle('active', isMenuOpen);
-    
-    // Prevent body scroll when menu is open
-    document.body.style.overflow = isMenuOpen ? 'hidden' : '';
-    
-    // Add ARIA attributes for accessibility
-    menuToggle.setAttribute('aria-expanded', isMenuOpen);
-    navMenu.setAttribute('aria-hidden', !isMenuOpen);
-    
-    // Reset menu item animations when opening
     if (isMenuOpen) {
+        // When opening, reset animations first
         const menuItems = navMenu.querySelectorAll('li');
         menuItems.forEach(item => {
-            // Reset animation state
+            // Force reset to initial animation state
+            item.style.animation = 'none';
             item.style.opacity = '0';
             item.style.transform = 'translateX(-20px)';
-            // Force reflow
-            void item.offsetWidth;
-            // Remove inline styles to let CSS animation take over
-            item.style.opacity = '';
-            item.style.transform = '';
         });
+        
+        // Force reflow
+        void navMenu.offsetWidth;
+        
+        // Now add active class
+        navMenu.classList.add('active');
+        menuToggle.classList.add('active');
+        
+        // Remove inline styles to let CSS animation work
+        setTimeout(() => {
+            menuItems.forEach(item => {
+                item.style.animation = '';
+                item.style.opacity = '';
+                item.style.transform = '';
+            });
+        }, 10);
+        
+        // Prevent body scroll when menu is open
+        document.body.style.overflow = 'hidden';
+        
+        // Add ARIA attributes for accessibility
+        menuToggle.setAttribute('aria-expanded', true);
+        navMenu.setAttribute('aria-hidden', false);
         
         // Trap focus within menu
         trapFocus(navMenu);
@@ -40,6 +49,15 @@ function toggleMenu() {
             if (firstLink) firstLink.focus();
         }, 300);
     } else {
+        // When closing
+        navMenu.classList.remove('active');
+        menuToggle.classList.remove('active');
+        document.body.style.overflow = '';
+        
+        // Update ARIA attributes
+        menuToggle.setAttribute('aria-expanded', false);
+        navMenu.setAttribute('aria-hidden', true);
+        
         // Return focus to toggle button
         menuToggle.focus();
         removeFocusTrap();
@@ -62,13 +80,12 @@ function closeMenu() {
     // Remove focus trap
     removeFocusTrap();
     
-    // Reset menu item animations by removing and re-adding animation classes
+    // Reset menu item animations
     const menuItems = navMenu.querySelectorAll('li');
     menuItems.forEach(item => {
-        // Force reflow to reset animation
         item.style.animation = 'none';
-        void item.offsetWidth; // Trigger reflow
-        item.style.animation = '';
+        item.style.opacity = '0';
+        item.style.transform = 'translateX(-20px)';
     });
 }
 
