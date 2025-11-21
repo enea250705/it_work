@@ -1753,51 +1753,51 @@ body.fade-in.loaded {
 /* Only hide elements that explicitly have animation classes */
 .animate-fade-up {
     opacity: 0;
-    transform: translateY(30px);
-    filter: blur(4px);
-    transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1), 
-                transform 1.2s cubic-bezier(0.4, 0, 0.2, 1),
-                filter 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: translateY(60px);
+    filter: blur(5px);
+    transition: opacity 1.3s cubic-bezier(0.25, 0.1, 0.25, 1), 
+                transform 1.3s cubic-bezier(0.25, 0.1, 0.25, 1),
+                filter 1.3s cubic-bezier(0.25, 0.1, 0.25, 1);
     will-change: opacity, transform, filter;
 }
 
 .animate-fade-down {
     opacity: 0;
-    transform: translateY(-30px);
-    filter: blur(4px);
-    transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1), 
-                transform 1.2s cubic-bezier(0.4, 0, 0.2, 1),
-                filter 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: translateY(-60px);
+    filter: blur(5px);
+    transition: opacity 1.3s cubic-bezier(0.25, 0.1, 0.25, 1), 
+                transform 1.3s cubic-bezier(0.25, 0.1, 0.25, 1),
+                filter 1.3s cubic-bezier(0.25, 0.1, 0.25, 1);
     will-change: opacity, transform, filter;
 }
 
 .animate-fade-left {
     opacity: 0;
-    transform: translateX(-40px);
-    filter: blur(4px);
-    transition: opacity 1.4s cubic-bezier(0.4, 0, 0.2, 1), 
-                transform 1.4s cubic-bezier(0.4, 0, 0.2, 1),
-                filter 1.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: translateX(-70px);
+    filter: blur(5px);
+    transition: opacity 1.5s cubic-bezier(0.25, 0.1, 0.25, 1), 
+                transform 1.5s cubic-bezier(0.25, 0.1, 0.25, 1),
+                filter 1.5s cubic-bezier(0.25, 0.1, 0.25, 1);
     will-change: opacity, transform, filter;
 }
 
 .animate-fade-right {
     opacity: 0;
-    transform: translateX(40px);
-    filter: blur(4px);
-    transition: opacity 1.4s cubic-bezier(0.4, 0, 0.2, 1), 
-                transform 1.4s cubic-bezier(0.4, 0, 0.2, 1),
-                filter 1.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: translateX(70px);
+    filter: blur(5px);
+    transition: opacity 1.5s cubic-bezier(0.25, 0.1, 0.25, 1), 
+                transform 1.5s cubic-bezier(0.25, 0.1, 0.25, 1),
+                filter 1.5s cubic-bezier(0.25, 0.1, 0.25, 1);
     will-change: opacity, transform, filter;
 }
 
 .animate-fade-scale {
     opacity: 0;
-    transform: scale(0.92);
-    filter: blur(3px);
-    transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1), 
-                transform 1.2s cubic-bezier(0.4, 0, 0.2, 1),
-                filter 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: scale(0.85);
+    filter: blur(4px);
+    transition: opacity 1.3s cubic-bezier(0.25, 0.1, 0.25, 1), 
+                transform 1.3s cubic-bezier(0.25, 0.1, 0.25, 1),
+                filter 1.3s cubic-bezier(0.25, 0.1, 0.25, 1);
     will-change: opacity, transform, filter;
 }
 
@@ -1807,14 +1807,14 @@ body.fade-in.loaded {
     filter: blur(0) !important;
 }
 
-/* Enhanced scroll animations for images and text - Soft and Beautiful */
+/* Enhanced scroll animations for images and text - Soft and Visible */
 img.animate-fade-left {
     opacity: 0;
-    transform: translateX(-50px);
-    filter: blur(5px);
-    transition: opacity 1.5s cubic-bezier(0.4, 0, 0.2, 1), 
-                transform 1.5s cubic-bezier(0.4, 0, 0.2, 1),
-                filter 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: translateX(-80px);
+    filter: blur(6px);
+    transition: opacity 1.6s cubic-bezier(0.25, 0.1, 0.25, 1), 
+                transform 1.6s cubic-bezier(0.25, 0.1, 0.25, 1),
+                filter 1.6s cubic-bezier(0.25, 0.1, 0.25, 1);
 }
 
 img.animate-fade-left.animate-visible {
@@ -1826,21 +1826,21 @@ img.animate-fade-left.animate-visible {
 .about-image.animate-fade-left,
 .about-img.animate-fade-left {
     opacity: 0;
-    transform: translateX(-50px);
-    filter: blur(5px);
-    transition: opacity 1.6s cubic-bezier(0.4, 0, 0.2, 1), 
-                transform 1.6s cubic-bezier(0.4, 0, 0.2, 1),
-                filter 1.6s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: translateX(-80px);
+    filter: blur(6px);
+    transition: opacity 1.7s cubic-bezier(0.25, 0.1, 0.25, 1), 
+                transform 1.7s cubic-bezier(0.25, 0.1, 0.25, 1),
+                filter 1.7s cubic-bezier(0.25, 0.1, 0.25, 1);
 }
 
 .about-text.animate-fade-right,
 .about-content > div.animate-fade-right {
     opacity: 0;
-    transform: translateX(50px);
-    filter: blur(5px);
-    transition: opacity 1.6s cubic-bezier(0.4, 0, 0.2, 1), 
-                transform 1.6s cubic-bezier(0.4, 0, 0.2, 1),
-                filter 1.6s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: translateX(80px);
+    filter: blur(6px);
+    transition: opacity 1.7s cubic-bezier(0.25, 0.1, 0.25, 1), 
+                transform 1.7s cubic-bezier(0.25, 0.1, 0.25, 1),
+                filter 1.7s cubic-bezier(0.25, 0.1, 0.25, 1);
 }
 
 .about-image.animate-fade-left.animate-visible,
@@ -1857,6 +1857,54 @@ img.animate-fade-left.animate-visible {
     filter: blur(0) !important;
 }
 
+/* Universal image animations for all pages - Soft and Visible */
+.service-detail-image.animate-fade-left,
+.service-image-container.animate-fade-left,
+.news-image.animate-fade-left,
+[class*="image"]:not(.hero-image):not(.navbar):not(.footer).animate-fade-left {
+    opacity: 0;
+    transform: translateX(-80px);
+    filter: blur(6px);
+    transition: opacity 1.7s cubic-bezier(0.25, 0.1, 0.25, 1), 
+                transform 1.7s cubic-bezier(0.25, 0.1, 0.25, 1),
+                filter 1.7s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+.service-detail-image.animate-fade-left.animate-visible,
+.service-image-container.animate-fade-left.animate-visible,
+.news-image.animate-fade-left.animate-visible,
+[class*="image"]:not(.hero-image):not(.navbar):not(.footer).animate-fade-left.animate-visible {
+    opacity: 1 !important;
+    transform: translateX(0) !important;
+    filter: blur(0) !important;
+}
+
+/* Universal text animations for all pages - Soft and Visible */
+.service-detail-text.animate-fade-right,
+.value-description.animate-fade-right,
+.news-description.animate-fade-right,
+.news-content.animate-fade-right,
+.news-excerpt.animate-fade-right,
+.product-description.animate-fade-right {
+    opacity: 0;
+    transform: translateX(80px);
+    filter: blur(6px);
+    transition: opacity 1.7s cubic-bezier(0.25, 0.1, 0.25, 1), 
+                transform 1.7s cubic-bezier(0.25, 0.1, 0.25, 1),
+                filter 1.7s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+.service-detail-text.animate-fade-right.animate-visible,
+.value-description.animate-fade-right.animate-visible,
+.news-description.animate-fade-right.animate-visible,
+.news-content.animate-fade-right.animate-visible,
+.news-excerpt.animate-fade-right.animate-visible,
+.product-description.animate-fade-right.animate-visible {
+    opacity: 1 !important;
+    transform: translateX(0) !important;
+    filter: blur(0) !important;
+}
+
 /* Fallback: if JavaScript is disabled, show everything */
 .no-js .animate-fade-up,
 .no-js .animate-fade-down,
@@ -1868,7 +1916,7 @@ img.animate-fade-left.animate-visible {
     filter: blur(0) !important;
 }
 
-/* Additional soft fade-in for text elements */
+/* Additional soft and visible fade-in for text elements */
 p.animate-fade-right,
 h2.animate-fade-right,
 h3.animate-fade-right,
@@ -1876,11 +1924,11 @@ h4.animate-fade-right,
 .section-title.animate-fade-right,
 .section-subtitle.animate-fade-right {
     opacity: 0;
-    transform: translateX(35px);
-    filter: blur(4px);
-    transition: opacity 1.3s cubic-bezier(0.4, 0, 0.2, 1), 
-                transform 1.3s cubic-bezier(0.4, 0, 0.2, 1),
-                filter 1.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: translateX(70px);
+    filter: blur(5px);
+    transition: opacity 1.4s cubic-bezier(0.25, 0.1, 0.25, 1), 
+                transform 1.4s cubic-bezier(0.25, 0.1, 0.25, 1),
+                filter 1.4s cubic-bezier(0.25, 0.1, 0.25, 1);
 }
 
 p.animate-fade-right.animate-visible,
@@ -1922,48 +1970,48 @@ html {
     scroll-behavior: smooth;
 }
 
-/* Mobile adjustments for scroll animations - Soft and Beautiful */
+/* Mobile adjustments for scroll animations - Soft and Visible */
 @media (max-width: 768px) {
     .animate-fade-left {
-        transform: translateX(-30px);
-        filter: blur(3px);
-        transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1), 
-                    transform 1.2s cubic-bezier(0.4, 0, 0.2, 1),
-                    filter 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+        transform: translateX(-50px);
+        filter: blur(4px);
+        transition: opacity 1.2s cubic-bezier(0.25, 0.1, 0.25, 1), 
+                    transform 1.2s cubic-bezier(0.25, 0.1, 0.25, 1),
+                    filter 1.2s cubic-bezier(0.25, 0.1, 0.25, 1);
     }
     
     .animate-fade-right {
-        transform: translateX(30px);
-        filter: blur(3px);
-        transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1), 
-                    transform 1.2s cubic-bezier(0.4, 0, 0.2, 1),
-                    filter 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+        transform: translateX(50px);
+        filter: blur(4px);
+        transition: opacity 1.2s cubic-bezier(0.25, 0.1, 0.25, 1), 
+                    transform 1.2s cubic-bezier(0.25, 0.1, 0.25, 1),
+                    filter 1.2s cubic-bezier(0.25, 0.1, 0.25, 1);
     }
     
     img.animate-fade-left {
-        transform: translateX(-35px);
-        filter: blur(4px);
-        transition: opacity 1.3s cubic-bezier(0.4, 0, 0.2, 1), 
-                    transform 1.3s cubic-bezier(0.4, 0, 0.2, 1),
-                    filter 1.3s cubic-bezier(0.4, 0, 0.2, 1);
+        transform: translateX(-60px);
+        filter: blur(5px);
+        transition: opacity 1.4s cubic-bezier(0.25, 0.1, 0.25, 1), 
+                    transform 1.4s cubic-bezier(0.25, 0.1, 0.25, 1),
+                    filter 1.4s cubic-bezier(0.25, 0.1, 0.25, 1);
     }
     
     .about-image.animate-fade-left,
     .about-img.animate-fade-left {
-        transform: translateX(-35px);
-        filter: blur(4px);
-        transition: opacity 1.3s cubic-bezier(0.4, 0, 0.2, 1), 
-                    transform 1.3s cubic-bezier(0.4, 0, 0.2, 1),
-                    filter 1.3s cubic-bezier(0.4, 0, 0.2, 1);
+        transform: translateX(-60px);
+        filter: blur(5px);
+        transition: opacity 1.4s cubic-bezier(0.25, 0.1, 0.25, 1), 
+                    transform 1.4s cubic-bezier(0.25, 0.1, 0.25, 1),
+                    filter 1.4s cubic-bezier(0.25, 0.1, 0.25, 1);
     }
     
     .about-text.animate-fade-right,
     .about-content > div.animate-fade-right {
-        transform: translateX(35px);
-        filter: blur(4px);
-        transition: opacity 1.3s cubic-bezier(0.4, 0, 0.2, 1), 
-                    transform 1.3s cubic-bezier(0.4, 0, 0.2, 1),
-                    filter 1.3s cubic-bezier(0.4, 0, 0.2, 1);
+        transform: translateX(60px);
+        filter: blur(5px);
+        transition: opacity 1.4s cubic-bezier(0.25, 0.1, 0.25, 1), 
+                    transform 1.4s cubic-bezier(0.25, 0.1, 0.25, 1),
+                    filter 1.4s cubic-bezier(0.25, 0.1, 0.25, 1);
     }
 }
 

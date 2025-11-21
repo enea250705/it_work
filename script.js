@@ -577,57 +577,90 @@ document.querySelectorAll('.benefit-card').forEach((card, index) => {
     animationObserver.observe(card);
 });
 
-// Automatic Scroll Animations for Images and Text
+// Automatic Scroll Animations for Images and Text - Works on ALL pages
 // Images slide in from left, text slides in from right
 function initializeScrollAnimations() {
-    // Find all images (except those in hero or already animated)
-    document.querySelectorAll('img:not(.hero img):not(.animate-fade-left):not(.animate-fade-right):not(.animate-fade-up):not(.animate-fade-down):not(.animate-fade-scale)').forEach((img, index) => {
-        // Skip if image is in a container that already has animation
-        if (!img.closest('.animate-fade-left, .animate-fade-right, .animate-fade-up, .animate-fade-down, .animate-fade-scale')) {
-            img.classList.add('animate-fade-left');
-            img.classList.add(`stagger-${(index % 6) + 1}`);
-            animationObserver.observe(img);
-        }
-    });
-
-    // Find all text containers and animate from right (but skip about-text as it's handled separately)
-    document.querySelectorAll('section:not(.hero) .container > div:not(.about-text):not(.about-image):not(.about-content), .service-description, .section-subtitle').forEach((textContainer, index) => {
-        // Skip if already animated or contains images or is a parent of animated elements
-        if (!textContainer.classList.contains('animate-fade-left') && 
-            !textContainer.classList.contains('animate-fade-right') &&
-            !textContainer.classList.contains('animate-fade-up') &&
-            !textContainer.classList.contains('animate-fade-down') &&
-            !textContainer.classList.contains('animate-fade-scale') &&
-            !textContainer.querySelector('img') &&
-            !textContainer.closest('.animate-fade-left, .animate-fade-right, .animate-fade-up, .animate-fade-down, .animate-fade-scale')) {
+    // Find ALL images on the page (except those in hero or already animated)
+    document.querySelectorAll('img:not(.hero img):not(.navbar img):not(.footer img)').forEach((img, index) => {
+        // Skip if already has animation class
+        if (!img.classList.contains('animate-fade-left') && 
+            !img.classList.contains('animate-fade-right') &&
+            !img.classList.contains('animate-fade-up') &&
+            !img.classList.contains('animate-fade-down') &&
+            !img.classList.contains('animate-fade-scale')) {
             
-            // Check if it's a text-heavy container
-            const textElements = textContainer.querySelectorAll('p, h2, h3, h4, h5, h6, .section-title, .section-subtitle');
-            if (textElements.length > 0 || textContainer.tagName === 'P') {
-                textContainer.classList.add('animate-fade-right');
-                textContainer.classList.add(`stagger-${(index % 6) + 1}`);
-                animationObserver.observe(textContainer);
+            // Skip if image is in a container that already has animation
+            if (!img.closest('.animate-fade-left, .animate-fade-right, .animate-fade-up, .animate-fade-down, .animate-fade-scale')) {
+                img.classList.add('animate-fade-left');
+                img.classList.add(`stagger-${(index % 6) + 1}`);
+                animationObserver.observe(img);
             }
         }
     });
 
-    // Animate about section specifically - image from left, text from right
-    const aboutImageContainer = document.querySelector('.about-image');
-    const aboutImage = document.querySelector('.about-img');
-    const aboutText = document.querySelector('.about-text');
+    // Find ALL image containers (like .about-image, .service-detail-image, .news-image, etc.)
+    document.querySelectorAll('.about-image, .service-detail-image, .service-image-container, .news-image, [class*="image"]:not(.hero-image):not(.navbar):not(.footer)').forEach((imgContainer, index) => {
+        if (!imgContainer.classList.contains('animate-fade-left') && 
+            !imgContainer.classList.contains('animate-fade-right') &&
+            !imgContainer.classList.contains('animate-fade-up') &&
+            !imgContainer.classList.contains('animate-fade-down') &&
+            !imgContainer.classList.contains('animate-fade-scale') &&
+            !imgContainer.closest('.animate-fade-left, .animate-fade-right, .animate-fade-up, .animate-fade-down, .animate-fade-scale')) {
+            imgContainer.classList.add('animate-fade-left');
+            animationObserver.observe(imgContainer);
+        }
+    });
+
+    // Find ALL text containers across all pages
+    const textSelectors = [
+        '.about-text',
+        '.service-detail-text',
+        '.service-description',
+        '.section-subtitle',
+        'section:not(.hero) .container > div:not([class*="image"]):not(.hero-content)',
+        '.value-description',
+        '.news-description',
+        '.news-content',
+        '.news-excerpt',
+        '.product-description'
+    ];
     
-    if (aboutImageContainer && !aboutImageContainer.classList.contains('animate-fade-left')) {
-        aboutImageContainer.classList.add('animate-fade-left');
-        animationObserver.observe(aboutImageContainer);
-    } else if (aboutImage && !aboutImage.classList.contains('animate-fade-left')) {
-        aboutImage.classList.add('animate-fade-left');
-        animationObserver.observe(aboutImage);
-    }
-    
-    if (aboutText && !aboutText.classList.contains('animate-fade-right')) {
-        aboutText.classList.add('animate-fade-right');
-        animationObserver.observe(aboutText);
-    }
+    textSelectors.forEach(selector => {
+        document.querySelectorAll(selector).forEach((textContainer, index) => {
+            // Skip if already animated or contains images or is a parent of animated elements
+            if (!textContainer.classList.contains('animate-fade-left') && 
+                !textContainer.classList.contains('animate-fade-right') &&
+                !textContainer.classList.contains('animate-fade-up') &&
+                !textContainer.classList.contains('animate-fade-down') &&
+                !textContainer.classList.contains('animate-fade-scale') &&
+                !textContainer.querySelector('img') &&
+                !textContainer.closest('.animate-fade-left, .animate-fade-right, .animate-fade-up, .animate-fade-down, .animate-fade-scale')) {
+                
+                // Check if it's a text-heavy container
+                const textElements = textContainer.querySelectorAll('p, h2, h3, h4, h5, h6, .section-title, .section-subtitle, li');
+                if (textElements.length > 0 || textContainer.tagName === 'P') {
+                    textContainer.classList.add('animate-fade-right');
+                    textContainer.classList.add(`stagger-${(index % 6) + 1}`);
+                    animationObserver.observe(textContainer);
+                }
+            }
+        });
+    });
+
+    // Animate paragraphs and headings that are direct children of sections
+    document.querySelectorAll('section:not(.hero) p, section:not(.hero) h2, section:not(.hero) h3, section:not(.hero) h4').forEach((textEl, index) => {
+        if (!textEl.classList.contains('animate-fade-left') && 
+            !textEl.classList.contains('animate-fade-right') &&
+            !textEl.classList.contains('animate-fade-up') &&
+            !textEl.classList.contains('animate-fade-down') &&
+            !textEl.classList.contains('animate-fade-scale') &&
+            !textEl.closest('.animate-fade-left, .animate-fade-right, .animate-fade-up, .animate-fade-down, .animate-fade-scale') &&
+            !textEl.closest('.about-text, .service-detail-text, .service-description')) {
+            textEl.classList.add('animate-fade-right');
+            textEl.classList.add(`stagger-${(index % 6) + 1}`);
+            animationObserver.observe(textEl);
+        }
+    });
 
     // Animate section headers
     document.querySelectorAll('.section-header').forEach((header, index) => {
@@ -647,6 +680,19 @@ function initializeScrollAnimations() {
             stat.classList.add('animate-fade-scale');
             stat.classList.add(`stagger-${(index % 3) + 1}`);
             animationObserver.observe(stat);
+        }
+    });
+
+    // Animate cards and grid items
+    document.querySelectorAll('.service-card, .value-card, .news-card, .product-card, .category-card').forEach((card, index) => {
+        if (!card.classList.contains('animate-fade-up') && 
+            !card.classList.contains('animate-fade-down') &&
+            !card.classList.contains('animate-fade-left') &&
+            !card.classList.contains('animate-fade-right') &&
+            !card.classList.contains('animate-fade-scale')) {
+            card.classList.add('animate-fade-up');
+            card.classList.add(`stagger-${(index % 6) + 1}`);
+            animationObserver.observe(card);
         }
     });
 }
