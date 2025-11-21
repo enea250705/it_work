@@ -1753,42 +1753,108 @@ body.fade-in.loaded {
 /* Only hide elements that explicitly have animation classes */
 .animate-fade-up {
     opacity: 0;
-    transform: translateY(60px);
-    transition: opacity 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    will-change: opacity, transform;
+    transform: translateY(30px);
+    filter: blur(4px);
+    transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1), 
+                transform 1.2s cubic-bezier(0.4, 0, 0.2, 1),
+                filter 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: opacity, transform, filter;
 }
 
 .animate-fade-down {
     opacity: 0;
-    transform: translateY(-60px);
-    transition: opacity 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    will-change: opacity, transform;
+    transform: translateY(-30px);
+    filter: blur(4px);
+    transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1), 
+                transform 1.2s cubic-bezier(0.4, 0, 0.2, 1),
+                filter 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: opacity, transform, filter;
 }
 
 .animate-fade-left {
     opacity: 0;
-    transform: translateX(-60px);
-    transition: opacity 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    will-change: opacity, transform;
+    transform: translateX(-40px);
+    filter: blur(4px);
+    transition: opacity 1.4s cubic-bezier(0.4, 0, 0.2, 1), 
+                transform 1.4s cubic-bezier(0.4, 0, 0.2, 1),
+                filter 1.4s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: opacity, transform, filter;
 }
 
 .animate-fade-right {
     opacity: 0;
-    transform: translateX(60px);
-    transition: opacity 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    will-change: opacity, transform;
+    transform: translateX(40px);
+    filter: blur(4px);
+    transition: opacity 1.4s cubic-bezier(0.4, 0, 0.2, 1), 
+                transform 1.4s cubic-bezier(0.4, 0, 0.2, 1),
+                filter 1.4s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: opacity, transform, filter;
 }
 
 .animate-fade-scale {
     opacity: 0;
-    transform: scale(0.85);
-    transition: opacity 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    will-change: opacity, transform;
+    transform: scale(0.92);
+    filter: blur(3px);
+    transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1), 
+                transform 1.2s cubic-bezier(0.4, 0, 0.2, 1),
+                filter 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: opacity, transform, filter;
 }
 
 .animate-visible {
     opacity: 1 !important;
     transform: translateY(0) translateX(0) scale(1) !important;
+    filter: blur(0) !important;
+}
+
+/* Enhanced scroll animations for images and text - Soft and Beautiful */
+img.animate-fade-left {
+    opacity: 0;
+    transform: translateX(-50px);
+    filter: blur(5px);
+    transition: opacity 1.5s cubic-bezier(0.4, 0, 0.2, 1), 
+                transform 1.5s cubic-bezier(0.4, 0, 0.2, 1),
+                filter 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+img.animate-fade-left.animate-visible {
+    opacity: 1 !important;
+    transform: translateX(0) !important;
+    filter: blur(0) !important;
+}
+
+.about-image.animate-fade-left,
+.about-img.animate-fade-left {
+    opacity: 0;
+    transform: translateX(-50px);
+    filter: blur(5px);
+    transition: opacity 1.6s cubic-bezier(0.4, 0, 0.2, 1), 
+                transform 1.6s cubic-bezier(0.4, 0, 0.2, 1),
+                filter 1.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.about-text.animate-fade-right,
+.about-content > div.animate-fade-right {
+    opacity: 0;
+    transform: translateX(50px);
+    filter: blur(5px);
+    transition: opacity 1.6s cubic-bezier(0.4, 0, 0.2, 1), 
+                transform 1.6s cubic-bezier(0.4, 0, 0.2, 1),
+                filter 1.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.about-image.animate-fade-left.animate-visible,
+.about-img.animate-fade-left.animate-visible {
+    opacity: 1 !important;
+    transform: translateX(0) !important;
+    filter: blur(0) !important;
+}
+
+.about-text.animate-fade-right.animate-visible,
+.about-content > div.animate-fade-right.animate-visible {
+    opacity: 1 !important;
+    transform: translateX(0) !important;
+    filter: blur(0) !important;
 }
 
 /* Fallback: if JavaScript is disabled, show everything */
@@ -1799,6 +1865,33 @@ body.fade-in.loaded {
 .no-js .animate-fade-scale {
     opacity: 1 !important;
     transform: none !important;
+    filter: blur(0) !important;
+}
+
+/* Additional soft fade-in for text elements */
+p.animate-fade-right,
+h2.animate-fade-right,
+h3.animate-fade-right,
+h4.animate-fade-right,
+.section-title.animate-fade-right,
+.section-subtitle.animate-fade-right {
+    opacity: 0;
+    transform: translateX(35px);
+    filter: blur(4px);
+    transition: opacity 1.3s cubic-bezier(0.4, 0, 0.2, 1), 
+                transform 1.3s cubic-bezier(0.4, 0, 0.2, 1),
+                filter 1.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+p.animate-fade-right.animate-visible,
+h2.animate-fade-right.animate-visible,
+h3.animate-fade-right.animate-visible,
+h4.animate-fade-right.animate-visible,
+.section-title.animate-fade-right.animate-visible,
+.section-subtitle.animate-fade-right.animate-visible {
+    opacity: 1 !important;
+    transform: translateX(0) !important;
+    filter: blur(0) !important;
 }
 
 /* Sections are visible by default, but animation classes will override */
@@ -1810,23 +1903,68 @@ section:not(.hero) {
 /* When sections have animation classes, they follow the animation rules */
 /* The .animate-fade-up, etc. classes already set opacity: 0 */
 
-/* Stagger Animation Delays - Enhanced for smoother scroll animations */
-.stagger-1 { transition-delay: 0.05s; }
-.stagger-2 { transition-delay: 0.1s; }
-.stagger-3 { transition-delay: 0.15s; }
-.stagger-4 { transition-delay: 0.2s; }
-.stagger-5 { transition-delay: 0.25s; }
-.stagger-6 { transition-delay: 0.3s; }
+/* Stagger Animation Delays - Soft and Beautiful */
+.stagger-1 { transition-delay: 0.08s; }
+.stagger-2 { transition-delay: 0.15s; }
+.stagger-3 { transition-delay: 0.22s; }
+.stagger-4 { transition-delay: 0.28s; }
+.stagger-5 { transition-delay: 0.35s; }
+.stagger-6 { transition-delay: 0.42s; }
 
 /* Additional stagger delays for more complex animations */
-.stagger-7 { transition-delay: 0.35s; }
-.stagger-8 { transition-delay: 0.4s; }
-.stagger-9 { transition-delay: 0.45s; }
-.stagger-10 { transition-delay: 0.5s; }
+.stagger-7 { transition-delay: 0.48s; }
+.stagger-8 { transition-delay: 0.55s; }
+.stagger-9 { transition-delay: 0.62s; }
+.stagger-10 { transition-delay: 0.68s; }
 
 /* Smooth scroll behavior */
 html {
     scroll-behavior: smooth;
+}
+
+/* Mobile adjustments for scroll animations - Soft and Beautiful */
+@media (max-width: 768px) {
+    .animate-fade-left {
+        transform: translateX(-30px);
+        filter: blur(3px);
+        transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1), 
+                    transform 1.2s cubic-bezier(0.4, 0, 0.2, 1),
+                    filter 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .animate-fade-right {
+        transform: translateX(30px);
+        filter: blur(3px);
+        transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1), 
+                    transform 1.2s cubic-bezier(0.4, 0, 0.2, 1),
+                    filter 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    img.animate-fade-left {
+        transform: translateX(-35px);
+        filter: blur(4px);
+        transition: opacity 1.3s cubic-bezier(0.4, 0, 0.2, 1), 
+                    transform 1.3s cubic-bezier(0.4, 0, 0.2, 1),
+                    filter 1.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .about-image.animate-fade-left,
+    .about-img.animate-fade-left {
+        transform: translateX(-35px);
+        filter: blur(4px);
+        transition: opacity 1.3s cubic-bezier(0.4, 0, 0.2, 1), 
+                    transform 1.3s cubic-bezier(0.4, 0, 0.2, 1),
+                    filter 1.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .about-text.animate-fade-right,
+    .about-content > div.animate-fade-right {
+        transform: translateX(35px);
+        filter: blur(4px);
+        transition: opacity 1.3s cubic-bezier(0.4, 0, 0.2, 1), 
+                    transform 1.3s cubic-bezier(0.4, 0, 0.2, 1),
+                    filter 1.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
 }
 
 /* Performance optimization for animations */

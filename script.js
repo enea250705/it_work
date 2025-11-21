@@ -223,19 +223,19 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     });
 });
 
-// Enhanced Intersection Observer for Wix-style animations with better scroll detection
+// Enhanced Intersection Observer for soft and beautiful animations
 const observerOptions = {
-    threshold: 0.1, // Trigger when 10% visible (more sensitive)
-    rootMargin: '0px 0px -50px 0px' // Start animation 50px before element enters viewport
+    threshold: 0.15, // Trigger when 15% visible for smoother feel
+    rootMargin: '0px 0px -100px 0px' // Start animation 100px before element enters viewport for earlier, softer appearance
 };
 
 const animationObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
         if (entry.isIntersecting) {
-            // Add visible class with a small delay for smoother animation
-            setTimeout(() => {
+            // Add visible class immediately for smooth, natural animation
+            requestAnimationFrame(() => {
                 entry.target.classList.add('animate-visible');
-            }, 50);
+            });
             // Don't observe again after animation
             animationObserver.unobserve(entry.target);
         }
@@ -577,8 +577,85 @@ document.querySelectorAll('.benefit-card').forEach((card, index) => {
     animationObserver.observe(card);
 });
 
+// Automatic Scroll Animations for Images and Text
+// Images slide in from left, text slides in from right
+function initializeScrollAnimations() {
+    // Find all images (except those in hero or already animated)
+    document.querySelectorAll('img:not(.hero img):not(.animate-fade-left):not(.animate-fade-right):not(.animate-fade-up):not(.animate-fade-down):not(.animate-fade-scale)').forEach((img, index) => {
+        // Skip if image is in a container that already has animation
+        if (!img.closest('.animate-fade-left, .animate-fade-right, .animate-fade-up, .animate-fade-down, .animate-fade-scale')) {
+            img.classList.add('animate-fade-left');
+            img.classList.add(`stagger-${(index % 6) + 1}`);
+            animationObserver.observe(img);
+        }
+    });
+
+    // Find all text containers and animate from right (but skip about-text as it's handled separately)
+    document.querySelectorAll('section:not(.hero) .container > div:not(.about-text):not(.about-image):not(.about-content), .service-description, .section-subtitle').forEach((textContainer, index) => {
+        // Skip if already animated or contains images or is a parent of animated elements
+        if (!textContainer.classList.contains('animate-fade-left') && 
+            !textContainer.classList.contains('animate-fade-right') &&
+            !textContainer.classList.contains('animate-fade-up') &&
+            !textContainer.classList.contains('animate-fade-down') &&
+            !textContainer.classList.contains('animate-fade-scale') &&
+            !textContainer.querySelector('img') &&
+            !textContainer.closest('.animate-fade-left, .animate-fade-right, .animate-fade-up, .animate-fade-down, .animate-fade-scale')) {
+            
+            // Check if it's a text-heavy container
+            const textElements = textContainer.querySelectorAll('p, h2, h3, h4, h5, h6, .section-title, .section-subtitle');
+            if (textElements.length > 0 || textContainer.tagName === 'P') {
+                textContainer.classList.add('animate-fade-right');
+                textContainer.classList.add(`stagger-${(index % 6) + 1}`);
+                animationObserver.observe(textContainer);
+            }
+        }
+    });
+
+    // Animate about section specifically - image from left, text from right
+    const aboutImageContainer = document.querySelector('.about-image');
+    const aboutImage = document.querySelector('.about-img');
+    const aboutText = document.querySelector('.about-text');
+    
+    if (aboutImageContainer && !aboutImageContainer.classList.contains('animate-fade-left')) {
+        aboutImageContainer.classList.add('animate-fade-left');
+        animationObserver.observe(aboutImageContainer);
+    } else if (aboutImage && !aboutImage.classList.contains('animate-fade-left')) {
+        aboutImage.classList.add('animate-fade-left');
+        animationObserver.observe(aboutImage);
+    }
+    
+    if (aboutText && !aboutText.classList.contains('animate-fade-right')) {
+        aboutText.classList.add('animate-fade-right');
+        animationObserver.observe(aboutText);
+    }
+
+    // Animate section headers
+    document.querySelectorAll('.section-header').forEach((header, index) => {
+        if (!header.classList.contains('animate-fade-up') && 
+            !header.classList.contains('animate-fade-down') &&
+            !header.classList.contains('animate-fade-left') &&
+            !header.classList.contains('animate-fade-right')) {
+            header.classList.add('animate-fade-up');
+            header.classList.add(`stagger-${(index % 3) + 1}`);
+            animationObserver.observe(header);
+        }
+    });
+
+    // Animate stats items
+    document.querySelectorAll('.stat-item').forEach((stat, index) => {
+        if (!stat.classList.contains('animate-fade-scale')) {
+            stat.classList.add('animate-fade-scale');
+            stat.classList.add(`stagger-${(index % 3) + 1}`);
+            animationObserver.observe(stat);
+        }
+    });
+}
+
 // Initialize all animations on page load - ensure visible elements are shown immediately
 document.addEventListener('DOMContentLoaded', () => {
+    // Initialize automatic scroll animations
+    initializeScrollAnimations();
+    
     // Immediately show elements that are already in viewport
     const checkVisibleElements = () => {
         document.querySelectorAll('.animate-fade-up, .animate-fade-down, .animate-fade-left, .animate-fade-right, .animate-fade-scale').forEach((el) => {
