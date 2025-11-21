@@ -18,8 +18,20 @@ function toggleMenu() {
     menuToggle.setAttribute('aria-expanded', isMenuOpen);
     navMenu.setAttribute('aria-hidden', !isMenuOpen);
     
-    // Focus management for accessibility
+    // Reset menu item animations when opening
     if (isMenuOpen) {
+        const menuItems = navMenu.querySelectorAll('li');
+        menuItems.forEach(item => {
+            // Reset animation state
+            item.style.opacity = '0';
+            item.style.transform = 'translateX(-20px)';
+            // Force reflow
+            void item.offsetWidth;
+            // Remove inline styles to let CSS animation take over
+            item.style.opacity = '';
+            item.style.transform = '';
+        });
+        
         // Trap focus within menu
         trapFocus(navMenu);
         // Focus first menu item
@@ -49,6 +61,15 @@ function closeMenu() {
     
     // Remove focus trap
     removeFocusTrap();
+    
+    // Reset menu item animations by removing and re-adding animation classes
+    const menuItems = navMenu.querySelectorAll('li');
+    menuItems.forEach(item => {
+        // Force reflow to reset animation
+        item.style.animation = 'none';
+        void item.offsetWidth; // Trigger reflow
+        item.style.animation = '';
+    });
 }
 
 // Focus trap functionality for accessibility
