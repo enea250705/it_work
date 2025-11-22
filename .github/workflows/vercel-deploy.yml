@@ -1,0 +1,37 @@
+name: Deploy to Vercel
+
+# This workflow automatically deploys your project to Vercel when you push to main branch
+# 
+# SETUP INSTRUCTIONS:
+# 1. Go to Vercel Dashboard > Settings > Tokens and create a new token
+# 2. Go to your Vercel project settings to find your ORG_ID and PROJECT_ID
+# 3. In your GitHub repository, go to Settings > Secrets and variables > Actions
+# 4. Add the following secrets:
+#    - VERCEL_TOKEN: Your Vercel access token
+#    - VERCEL_ORG_ID: Your Vercel organization ID
+#    - VERCEL_PROJECT_ID: Your Vercel project ID
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy to Vercel
+        uses: amondnet/vercel-action@v25
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          vercel-args: '--prod'
+          working-directory: ./
+
