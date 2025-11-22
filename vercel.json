@@ -1,7 +1,7 @@
 {
   "headers": [
     {
-      "source": "/(.*\\.(mp4|webm))",
+      "source": "/:path*\\.(mp4|webm)",
       "headers": [
         {
           "key": "Cache-Control",
