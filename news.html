@@ -179,6 +179,11 @@
                 const isMobile = window.innerWidth <= 1024;
                 let videoSrc = isMobile ? 'brain-space-hero-mobile.mp4' : 'Brain_Lines_circle_1.webm';
                 
+                // Clear any existing source first
+                heroVideo.src = '';
+                heroVideo.removeAttribute('src');
+                
+                console.log('News page - Setting video source:', videoSrc);
                 heroVideo.src = videoSrc;
                 heroVideo.style.display = 'block';
                 heroVideo.style.background = 'transparent';

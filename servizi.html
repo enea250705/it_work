@@ -221,6 +221,11 @@
                 const isMobile = window.innerWidth <= 1024;
                 let videoSrc = isMobile ? 'about-hero-mobile.mp4' : 'BS-COMFORT.mp4';
                 
+                // Clear any existing source first
+                heroVideo.src = '';
+                heroVideo.removeAttribute('src');
+                
+                console.log('Servizi page - Setting video source:', videoSrc);
                 heroVideo.src = videoSrc;
                 heroVideo.style.display = 'block';
                 heroVideo.style.background = 'transparent';

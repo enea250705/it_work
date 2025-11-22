@@ -245,7 +245,12 @@
                     videoSrc = 'brain-space-hero-desktop.webm';
                 }
                 
+                // Clear any existing source first to prevent caching issues
+                heroVideo.src = '';
+                heroVideo.removeAttribute('src');
+                
                 // Set src directly on video element (more reliable on mobile)
+                console.log('Index page - Setting video source:', videoSrc);
                 heroVideo.src = videoSrc;
                 
                 // Start hidden for beautiful fade-in

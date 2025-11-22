@@ -211,6 +211,11 @@
                 const isMobile = window.innerWidth <= 1024;
                 let videoSrc = isMobile ? 'BRAIN.SPACE-HERO-SHORT-LR-MOBILE.mp4' : 'brain-space-hero-video.mp4';
                 
+                // Clear any existing source first
+                heroVideo.src = '';
+                heroVideo.removeAttribute('src');
+                
+                console.log('Contatti page - Setting video source:', videoSrc);
                 heroVideo.src = videoSrc;
                 heroVideo.style.display = 'block';
                 heroVideo.style.background = 'transparent';

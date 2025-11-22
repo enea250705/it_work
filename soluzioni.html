@@ -205,6 +205,11 @@
                 const isMobile = window.innerWidth <= 1024;
                 let videoSrc = isMobile ? 'brain-space-hero-mobile.mp4' : '3mount_Loop_LR_1.webm';
                 
+                // Clear any existing source first
+                heroVideo.src = '';
+                heroVideo.removeAttribute('src');
+                
+                console.log('Soluzioni page - Setting video source:', videoSrc);
                 heroVideo.src = videoSrc;
                 heroVideo.style.display = 'block';
                 heroVideo.style.background = 'transparent';
