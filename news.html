@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <!-- Navigation -->
@@ -37,11 +38,20 @@
         </div>
     </nav>
 
-    <!-- Page Header -->
-    <section class="page-header">
+    <!-- Hero Section with Video -->
+    <section id="home" class="hero hero_home relative">
+        <div class="vid-con absolute">
+            <video id="hero-video" class="hero-video" autoplay loop muted playsinline>
+                <source src="brain-space-hero-mobile.mp4" type="video/mp4" media="(max-width: 1024px)">
+                <source src="Brain_Lines_circle_1.webm" type="video/webm" media="(min-width: 1025px)">
+            </video>
+            <div class="hero-video-overlay"></div>
+        </div>
         <div class="container">
-            <h1 class="page-title">News</h1>
-            <p class="page-subtitle">Ultime novità e aggiornamenti da A/R Studio Web</p>
+            <div class="hero-content">
+                <h1 class="hero-title text-white" id="typewriter-title"></h1>
+                <p class="hero-subtitle text-white" id="typewriter-subtitle"></p>
+            </div>
         </div>
     </section>
 
@@ -163,6 +173,115 @@
     </footer>
 
     <script src="script.js"></script>
+    <script>
+        // Video initialization for hero - Beautiful professional entrance
+        (function() {
+            var heroVideo = document.getElementById('hero-video');
+            if (heroVideo) {
+                heroVideo.style.opacity = '0';
+                heroVideo.style.transform = 'scale(1.05)';
+                heroVideo.style.transition = 'opacity 1.5s cubic-bezier(0.4, 0, 0.2, 1), transform 1.5s cubic-bezier(0.4, 0, 0.2, 1)';
+                
+                heroVideo.addEventListener('loadedmetadata', function() {
+                    this.currentTime = 0;
+                });
+                
+                heroVideo.addEventListener('canplay', function() {
+                    setTimeout(() => {
+                        this.style.opacity = '1';
+                        this.style.transform = 'scale(1)';
+                    }, 200);
+                });
+                
+                heroVideo.addEventListener('timeupdate', function() {
+                    if (this.currentTime >= 5) {
+                        this.currentTime = 0;
+                    }
+                });
+                
+                heroVideo.addEventListener('error', function() {
+                    this.style.display = 'none';
+                });
+            }
+        })();
+
+        // Typewriter effect for hero text
+        (function() {
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', initTypewriter);
+            } else {
+                initTypewriter();
+            }
+            
+            function initTypewriter() {
+                const titleElement = document.getElementById('typewriter-title');
+                const subtitleElement = document.getElementById('typewriter-subtitle');
+                
+                if (!titleElement || !subtitleElement) {
+                    if (titleElement) titleElement.textContent = 'News';
+                    if (subtitleElement) {
+                        subtitleElement.textContent = 'Ultime novità e aggiornamenti da A/R Studio Web';
+                        subtitleElement.style.opacity = '1';
+                    }
+                    return;
+                }
+                
+                const titleText = 'News';
+                const subtitleText = 'Ultime novità e aggiornamenti da A/R Studio Web';
+                
+                subtitleElement.style.opacity = '0';
+                subtitleElement.style.visibility = 'visible';
+                
+                function typeWriter(element, text, speed, callback) {
+                    if (!element) return;
+                    let i = 0;
+                    element.innerHTML = '';
+                    // Allow wrapping on mobile, use nowrap on desktop for titles only
+                    const isMobile = window.innerWidth <= 768;
+                    const isSubtitle = element.id === 'typewriter-subtitle';
+                    element.style.whiteSpace = (isMobile || isSubtitle) ? 'normal' : 'nowrap';
+                    
+                    // Create cursor element
+                    const cursor = document.createElement('span');
+                    cursor.style.borderRight = '2px solid rgba(255, 255, 255, 0.8)';
+                    cursor.style.paddingRight = '2px';
+                    cursor.style.marginLeft = '2px';
+                    cursor.style.animation = 'blink-caret 0.75s step-end infinite';
+                    
+                    function type() {
+                        if (i < text.length) {
+                            element.textContent = text.substring(0, i + 1);
+                            element.appendChild(cursor);
+                            i++;
+                            setTimeout(type, speed);
+                        } else {
+                            setTimeout(() => {
+                                cursor.remove();
+                                element.style.whiteSpace = 'normal';
+                            }, 600);
+                            if (callback) callback();
+                        }
+                    }
+                    type();
+                }
+                
+                setTimeout(() => {
+                    if (titleElement) {
+                        typeWriter(titleElement, titleText, 80, function() {
+                            setTimeout(() => {
+                                if (subtitleElement) {
+                                    subtitleElement.style.opacity = '1';
+                                    subtitleElement.style.visibility = 'visible';
+                                    subtitleElement.style.display = 'block';
+                                    typeWriter(subtitleElement, subtitleText, 50);
+                                }
+                            }, 400);
+                        });
+                    }
+                }, 500);
+            }
+        })();
+    </script>
 </body>
 </html>
 
