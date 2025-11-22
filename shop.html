@@ -224,7 +224,7 @@
             var heroVideo = document.getElementById('hero-video');
             if (heroVideo) {
                 const isMobile = window.innerWidth <= 1024;
-                let videoSrc = isMobile ? 'BRAIN.SPACE-HERO-SHORT-LR-MOBILE.mp4' : 'BRAIN.SPACE-HERO-SHORT-LR_1.webm';
+                let videoSrc = isMobile ? 'BRAIN.SPACE-HERO-SHORT-LR_1.webm' : 'BRAIN.SPACE-HERO-SHORT-LR_1.webm';
                 
                 // Aggressively clear any existing source to prevent caching issues
                 heroVideo.pause();
@@ -293,8 +293,8 @@
                 });
                 heroVideo.addEventListener('error', function(e) {
                     setTimeout(fadeInVideo, 500);
-                    if (isMobile && videoSrc.includes('MOBILE')) {
-                        heroVideo.src = 'BRAIN.SPACE-HERO-SHORT-LR_1.webm';
+                    if (isMobile) {
+                        heroVideo.src = 'BRAIN.SPACE-HERO-SHORT-LR_1.webm?page=shop&v=' + Date.now() + '&m=1';
                         heroVideo.load();
                     }
                 });

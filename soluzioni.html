@@ -203,7 +203,7 @@
             var heroVideo = document.getElementById('hero-video');
             if (heroVideo) {
                 const isMobile = window.innerWidth <= 1024;
-                let videoSrc = isMobile ? 'BRAIN.SPACE-HERO-SHORT-LR-MOBILE.mp4' : '3mount_Loop_LR_1.webm';
+                let videoSrc = isMobile ? '3mount_Loop_LR_1.webm' : '3mount_Loop_LR_1.webm';
                 
                 // Aggressively clear any existing source to prevent caching issues
                 heroVideo.pause();
@@ -272,8 +272,8 @@
                 });
                 heroVideo.addEventListener('error', function(e) {
                     setTimeout(fadeInVideo, 500);
-                    if (isMobile && videoSrc.includes('mobile')) {
-                        heroVideo.src = 'BRAIN.SPACE-HERO-SHORT-LR-MOBILE.mp4?page=soluzioni&v=1';
+                    if (isMobile) {
+                        heroVideo.src = '3mount_Loop_LR_1.webm?page=soluzioni&v=' + Date.now() + '&m=1';
                         heroVideo.load();
                     }
                 });

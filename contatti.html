@@ -209,7 +209,7 @@
             var heroVideo = document.getElementById('hero-video');
             if (heroVideo) {
                 const isMobile = window.innerWidth <= 1024;
-                let videoSrc = isMobile ? 'about-hero-mobile.mp4' : 'brain-space-hero-video.mp4';
+                let videoSrc = isMobile ? 'brain-space-hero-video.mp4' : 'brain-space-hero-video.mp4';
                 
                 // Aggressively clear any existing source to prevent caching issues
                 heroVideo.pause();
@@ -278,8 +278,8 @@
                 });
                 heroVideo.addEventListener('error', function(e) {
                     setTimeout(fadeInVideo, 500);
-                    if (isMobile && videoSrc.includes('mobile')) {
-                        heroVideo.src = 'about-hero-mobile.mp4?page=contatti&v=1';
+                    if (isMobile) {
+                        heroVideo.src = 'brain-space-hero-video.mp4?page=contatti&v=' + Date.now() + '&m=1';
                         heroVideo.load();
                     }
                 });

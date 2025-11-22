@@ -177,7 +177,7 @@
             var heroVideo = document.getElementById('hero-video');
             if (heroVideo) {
                 const isMobile = window.innerWidth <= 1024;
-                let videoSrc = isMobile ? 'about-hero-mobile.mp4' : 'Brain_Lines_circle_1.webm';
+                let videoSrc = isMobile ? 'Brain_Lines_circle_1.webm' : 'Brain_Lines_circle_1.webm';
                 
                 // Aggressively clear any existing source to prevent caching issues
                 heroVideo.pause();
@@ -246,8 +246,8 @@
                 });
                 heroVideo.addEventListener('error', function(e) {
                     setTimeout(fadeInVideo, 500);
-                    if (isMobile && videoSrc.includes('mobile')) {
-                        heroVideo.src = 'about-hero-mobile.mp4?page=news&v=1';
+                    if (isMobile) {
+                        heroVideo.src = 'Brain_Lines_circle_1.webm?page=news&v=' + Date.now() + '&m=1';
                         heroVideo.load();
                     }
                 });
