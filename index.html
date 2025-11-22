@@ -363,14 +363,19 @@
                     // Fallback: show text immediately
                     if (titleElement) titleElement.textContent = 'A/R Studio Web';
                     if (subtitleElement) {
-                        subtitleElement.textContent = 'Supporto informatico per lo sviluppo\u00A0tecnologico di aziende e privati';
+                        const isMobile = window.innerWidth <= 768;
+                        if (isMobile) {
+                            subtitleElement.innerHTML = 'Supporto informatico<br>per lo sviluppo tecnologico<br>di aziende e privati';
+                        } else {
+                            subtitleElement.textContent = 'Supporto informatico per lo sviluppo tecnologico di aziende e privati';
+                        }
                         subtitleElement.style.opacity = '1';
                     }
                     return;
                 }
                 
                 const titleText = 'A/R Studio Web';
-                const subtitleText = 'Supporto informatico per lo sviluppo\u00A0tecnologico di aziende e privati';
+                const subtitleText = 'Supporto informatico per lo sviluppo tecnologico di aziende e privati';
                 
                 // Set initial opacity for subtitle
                 subtitleElement.style.opacity = '0';
@@ -404,6 +409,17 @@
                             setTimeout(() => {
                                 cursor.remove();
                                 element.style.whiteSpace = 'normal';
+                                
+                                // For mobile, split subtitle into three lines
+                                if (isSubtitle && isMobile) {
+                                    const fullText = element.textContent;
+                                    // Split into three parts: "Supporto informatico" | "per lo sviluppo tecnologico" | "di aziende e privati"
+                                    const part1 = 'Supporto informatico';
+                                    const part2 = 'per lo sviluppo tecnologico';
+                                    const part3 = 'di aziende e privati';
+                                    
+                                    element.innerHTML = part1 + '<br>' + part2 + '<br>' + part3;
+                                }
                             }, 600);
                             if (callback) callback();
                         }
