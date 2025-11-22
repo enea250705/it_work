@@ -389,7 +389,15 @@
                     // Allow wrapping on mobile, use nowrap on desktop for titles only
                     const isMobile = window.innerWidth <= 768;
                     const isSubtitle = element.id === 'typewriter-subtitle';
-                    element.style.whiteSpace = (isMobile || isSubtitle) ? 'normal' : 'nowrap';
+                    
+                    // Prevent word breaking during typing
+                    if (isSubtitle && isMobile) {
+                        element.style.whiteSpace = 'nowrap';
+                        element.style.wordBreak = 'keep-all';
+                        element.style.overflowWrap = 'normal';
+                    } else {
+                        element.style.whiteSpace = (isMobile || isSubtitle) ? 'normal' : 'nowrap';
+                    }
                     
                     // Create cursor element
                     const cursor = document.createElement('span');
@@ -408,17 +416,20 @@
                             // Remove cursor after typing is complete
                             setTimeout(() => {
                                 cursor.remove();
-                                element.style.whiteSpace = 'normal';
                                 
                                 // For mobile, split subtitle into three lines
                                 if (isSubtitle && isMobile) {
-                                    const fullText = element.textContent;
                                     // Split into three parts: "Supporto informatico" | "per lo sviluppo tecnologico" | "di aziende e privati"
                                     const part1 = 'Supporto informatico';
                                     const part2 = 'per lo sviluppo tecnologico';
                                     const part3 = 'di aziende e privati';
                                     
                                     element.innerHTML = part1 + '<br>' + part2 + '<br>' + part3;
+                                    element.style.whiteSpace = 'normal';
+                                    element.style.wordBreak = 'normal';
+                                    element.style.overflowWrap = 'break-word';
+                                } else {
+                                    element.style.whiteSpace = 'normal';
                                 }
                             }, 600);
                             if (callback) callback();
