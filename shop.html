@@ -41,7 +41,7 @@
     <!-- Hero Section with Video -->
     <section id="home" class="hero hero_home relative">
         <div class="vid-con absolute">
-            <video id="hero-video" class="hero-video" autoplay loop muted playsinline>
+            <video id="hero-video" class="hero-video" autoplay loop muted playsinline preload="auto">
             </video>
             <div class="hero-video-overlay"></div>
         </div>
@@ -230,11 +230,13 @@
                 heroVideo.style.display = 'block';
                 heroVideo.style.opacity = '1';
                 heroVideo.style.transform = 'scale(1)';
+                heroVideo.style.background = 'transparent';
                 
                 heroVideo.setAttribute('autoplay', '');
                 heroVideo.setAttribute('muted', '');
                 heroVideo.setAttribute('playsinline', '');
                 heroVideo.setAttribute('loop', '');
+                heroVideo.setAttribute('preload', 'auto');
                 heroVideo.muted = true;
                 
                 heroVideo.load();

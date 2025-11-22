@@ -282,6 +282,7 @@ body.fade-in.loaded {
     z-index: 2;
     display: block;
     visibility: visible;
+    background: transparent;
 }
 
 .hero-video-overlay {
@@ -290,7 +291,7 @@ body.fade-in.loaded {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.4);
+    background: rgba(0, 0, 0, 0.2);
     z-index: 3;
     pointer-events: none;
 }
@@ -2242,7 +2243,6 @@ html {
         object-fit: cover !important;
         z-index: 2 !important;
         pointer-events: auto !important;
-        background: #000 !important;
     }
     
     .vid-con {
@@ -2266,6 +2266,7 @@ html {
         width: 100% !important;
         height: 100% !important;
         z-index: 3 !important;
+        background: rgba(0, 0, 0, 0.2) !important;
     }
 }
 
@@ -2283,7 +2284,6 @@ html {
         object-fit: cover !important;
         z-index: 2 !important;
         pointer-events: auto !important;
-        background: #000 !important;
     }
     
     .vid-con {

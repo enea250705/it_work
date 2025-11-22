@@ -41,9 +41,7 @@
     <!-- Hero Section with Video -->
     <section id="home" class="hero hero_home relative">
         <div class="vid-con absolute">
-            <video id="hero-video" class="hero-video" autoplay loop muted playsinline>
-                <source src="brain-space-hero-mobile.mp4" type="video/mp4" media="(max-width: 1024px)">
-                <source src="Brain_Lines_circle_1.webm" type="video/webm" media="(min-width: 1025px)">
+            <video id="hero-video" class="hero-video" autoplay loop muted playsinline preload="auto">
             </video>
             <div class="hero-video-overlay"></div>
         </div>
@@ -185,11 +183,13 @@
                 heroVideo.style.display = 'block';
                 heroVideo.style.opacity = '1';
                 heroVideo.style.transform = 'scale(1)';
+                heroVideo.style.background = 'transparent';
                 
                 heroVideo.setAttribute('autoplay', '');
                 heroVideo.setAttribute('muted', '');
                 heroVideo.setAttribute('playsinline', '');
                 heroVideo.setAttribute('loop', '');
+                heroVideo.setAttribute('preload', 'auto');
                 heroVideo.muted = true;
                 
                 heroVideo.load();
