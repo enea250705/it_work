@@ -245,9 +245,16 @@
                     videoSrc = 'brain-space-hero-desktop.webm';
                 }
                 
-                // Clear any existing source first to prevent caching issues
-                heroVideo.src = '';
+                // Aggressively clear any existing source to prevent caching issues
+                heroVideo.pause();
                 heroVideo.removeAttribute('src');
+                heroVideo.src = '';
+                heroVideo.load(); // Force unload
+                
+                // Add page-specific cache-busting parameter to prevent CDN/browser caching
+                // Using page name ensures each page gets unique video, but allows caching per page
+                const cacheBuster = '?page=index&v=1';
+                videoSrc = videoSrc + cacheBuster;
                 
                 // Set src directly on video element (more reliable on mobile)
                 console.log('Index page - Setting video source:', videoSrc);

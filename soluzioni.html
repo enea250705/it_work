@@ -205,9 +205,15 @@
                 const isMobile = window.innerWidth <= 1024;
                 let videoSrc = isMobile ? 'brain-space-hero-mobile.mp4' : '3mount_Loop_LR_1.webm';
                 
-                // Clear any existing source first
-                heroVideo.src = '';
+                // Aggressively clear any existing source to prevent caching issues
+                heroVideo.pause();
                 heroVideo.removeAttribute('src');
+                heroVideo.src = '';
+                heroVideo.load(); // Force unload
+                
+                // Add page-specific cache-busting parameter to prevent CDN/browser caching
+                const cacheBuster = '?page=soluzioni&v=1';
+                videoSrc = videoSrc + cacheBuster;
                 
                 console.log('Soluzioni page - Setting video source:', videoSrc);
                 heroVideo.src = videoSrc;
