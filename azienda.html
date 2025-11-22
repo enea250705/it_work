@@ -235,12 +235,28 @@
                 
                 heroVideo.appendChild(source);
                 
+                // Ensure video is visible and ready for mobile
+                heroVideo.style.display = 'block';
                 heroVideo.style.opacity = '0';
                 heroVideo.style.transform = 'scale(1.05)';
                 heroVideo.style.transition = 'opacity 1.5s cubic-bezier(0.4, 0, 0.2, 1), transform 1.5s cubic-bezier(0.4, 0, 0.2, 1)';
                 
+                // Set video attributes for mobile compatibility
+                heroVideo.setAttribute('autoplay', 'true');
+                heroVideo.setAttribute('muted', 'true');
+                heroVideo.setAttribute('playsinline', 'true');
+                heroVideo.setAttribute('loop', 'true');
+                
                 // Load the video
                 heroVideo.load();
+                
+                // Force play on mobile
+                const playPromise = heroVideo.play();
+                if (playPromise !== undefined) {
+                    playPromise.catch(error => {
+                        console.log('Autoplay prevented');
+                    });
+                }
                 
                 heroVideo.addEventListener('loadedmetadata', function() {
                     this.currentTime = 0;
@@ -253,15 +269,44 @@
                     }, 200);
                 });
                 
+                heroVideo.addEventListener('loadeddata', function() {
+                    setTimeout(() => {
+                        if (this.style.opacity === '0') {
+                            this.style.opacity = '1';
+                            this.style.transform = 'scale(1)';
+                        }
+                    }, 500);
+                });
+                
+                // On mobile, show video immediately after a short delay (fallback)
+                if (isMobile) {
+                    setTimeout(() => {
+                        heroVideo.style.opacity = '1';
+                        heroVideo.style.transform = 'scale(1)';
+                    }, 1000);
+                }
+                
                 heroVideo.addEventListener('timeupdate', function() {
                     if (this.currentTime >= 5) {
                         this.currentTime = 0;
                     }
                 });
                 
-                heroVideo.addEventListener('error', function() {
-                    console.error('Video error:', this.error);
+                heroVideo.addEventListener('error', function(e) {
+                    console.error('Video error:', this.error, e);
+                    setTimeout(() => {
+                        this.style.opacity = '1';
+                        this.style.transform = 'scale(1)';
+                    }, 1000);
                 });
+                
+                // Final fallback - ensure video is visible after 2 seconds
+                setTimeout(() => {
+                    if (heroVideo.style.opacity === '0') {
+                        heroVideo.style.opacity = '1';
+                        heroVideo.style.transform = 'scale(1)';
+                    }
+                }, 2000);
             }
         })();
 

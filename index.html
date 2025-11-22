@@ -249,13 +249,28 @@
                 
                 heroVideo.appendChild(source);
                 
-                // Start hidden for beautiful fade-in
+                // Ensure video is visible and ready for mobile
+                heroVideo.style.display = 'block';
                 heroVideo.style.opacity = '0';
                 heroVideo.style.transform = 'scale(1.05)';
                 heroVideo.style.transition = 'opacity 1.5s cubic-bezier(0.4, 0, 0.2, 1), transform 1.5s cubic-bezier(0.4, 0, 0.2, 1)';
                 
+                // Set video attributes for mobile compatibility
+                heroVideo.setAttribute('autoplay', 'true');
+                heroVideo.setAttribute('muted', 'true');
+                heroVideo.setAttribute('playsinline', 'true');
+                heroVideo.setAttribute('loop', 'true');
+                
                 // Load the video
                 heroVideo.load();
+                
+                // Force play on mobile (some browsers require user interaction, but we try)
+                const playPromise = heroVideo.play();
+                if (playPromise !== undefined) {
+                    playPromise.catch(error => {
+                        console.log('Autoplay prevented, will play on user interaction');
+                    });
+                }
                 
                 heroVideo.addEventListener('loadedmetadata', function() {
                     this.currentTime = 0;
@@ -269,6 +284,24 @@
                     }, 200);
                 });
                 
+                // Also show video on loadeddata (earlier event)
+                heroVideo.addEventListener('loadeddata', function() {
+                    setTimeout(() => {
+                        if (this.style.opacity === '0') {
+                            this.style.opacity = '1';
+                            this.style.transform = 'scale(1)';
+                        }
+                    }, 500);
+                });
+                
+                // On mobile, show video immediately after a short delay (fallback)
+                if (isMobile) {
+                    setTimeout(() => {
+                        heroVideo.style.opacity = '1';
+                        heroVideo.style.transform = 'scale(1)';
+                    }, 1000);
+                }
+                
                 // Loop video every 5 seconds
                 heroVideo.addEventListener('timeupdate', function() {
                     if (this.currentTime >= 5) {
@@ -276,15 +309,22 @@
                     }
                 });
                 
-                heroVideo.addEventListener('error', function() {
-                    console.error('Video error:', this.error);
-                    // Fallback: try the other source
-                    if (isMobile && source.src.includes('mobile')) {
-                        source.src = 'brain-space-hero-desktop.webm';
-                        source.type = 'video/webm';
-                        heroVideo.load();
-                    }
+                heroVideo.addEventListener('error', function(e) {
+                    console.error('Video error:', this.error, e);
+                    // Show video anyway after a delay
+                    setTimeout(() => {
+                        this.style.opacity = '1';
+                        this.style.transform = 'scale(1)';
+                    }, 1000);
                 });
+                
+                // Final fallback - ensure video is visible after 2 seconds
+                setTimeout(() => {
+                    if (heroVideo.style.opacity === '0') {
+                        heroVideo.style.opacity = '1';
+                        heroVideo.style.transform = 'scale(1)';
+                    }
+                }, 2000);
             }
         })();
 

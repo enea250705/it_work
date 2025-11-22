@@ -237,12 +237,24 @@
                 
                 heroVideo.appendChild(source);
                 
+                heroVideo.style.display = 'block';
                 heroVideo.style.opacity = '0';
                 heroVideo.style.transform = 'scale(1.05)';
                 heroVideo.style.transition = 'opacity 1.5s cubic-bezier(0.4, 0, 0.2, 1), transform 1.5s cubic-bezier(0.4, 0, 0.2, 1)';
                 
-                // Load the video
+                heroVideo.setAttribute('autoplay', 'true');
+                heroVideo.setAttribute('muted', 'true');
+                heroVideo.setAttribute('playsinline', 'true');
+                heroVideo.setAttribute('loop', 'true');
+                
                 heroVideo.load();
+                
+                const playPromise = heroVideo.play();
+                if (playPromise !== undefined) {
+                    playPromise.catch(error => {
+                        console.log('Autoplay prevented');
+                    });
+                }
                 
                 heroVideo.addEventListener('loadedmetadata', function() {
                     this.currentTime = 0;
@@ -255,15 +267,42 @@
                     }, 200);
                 });
                 
+                heroVideo.addEventListener('loadeddata', function() {
+                    setTimeout(() => {
+                        if (this.style.opacity === '0') {
+                            this.style.opacity = '1';
+                            this.style.transform = 'scale(1)';
+                        }
+                    }, 500);
+                });
+                
+                if (isMobile) {
+                    setTimeout(() => {
+                        heroVideo.style.opacity = '1';
+                        heroVideo.style.transform = 'scale(1)';
+                    }, 1000);
+                }
+                
                 heroVideo.addEventListener('timeupdate', function() {
                     if (this.currentTime >= 5) {
                         this.currentTime = 0;
                     }
                 });
                 
-                heroVideo.addEventListener('error', function() {
-                    console.error('Video error:', this.error);
+                heroVideo.addEventListener('error', function(e) {
+                    console.error('Video error:', this.error, e);
+                    setTimeout(() => {
+                        this.style.opacity = '1';
+                        this.style.transform = 'scale(1)';
+                    }, 1000);
                 });
+                
+                setTimeout(() => {
+                    if (heroVideo.style.opacity === '0') {
+                        heroVideo.style.opacity = '1';
+                        heroVideo.style.transform = 'scale(1)';
+                    }
+                }, 2000);
             }
         })();
 
