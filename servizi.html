@@ -219,7 +219,7 @@
             var heroVideo = document.getElementById('hero-video');
             if (heroVideo) {
                 const isMobile = window.innerWidth <= 1024;
-                let videoSrc = isMobile ? 'BS-COMFORT.mp4' : 'TECHNOLOGY.mp4';
+                let videoSrc = 'TECHNOLOGY.mp4';
                 
                 // Aggressively clear any existing source to prevent caching issues
                 heroVideo.pause();
@@ -288,8 +288,8 @@
                 });
                 heroVideo.addEventListener('error', function(e) {
                     setTimeout(fadeInVideo, 500);
-                    if (isMobile && videoSrc.includes('mobile')) {
-                        heroVideo.src = 'BS-COMFORT.mp4?page=servizi&v=1';
+                    if (isMobile) {
+                        heroVideo.src = 'TECHNOLOGY.mp4?page=servizi&v=' + Date.now() + '&m=1';
                         heroVideo.load();
                     }
                 });
