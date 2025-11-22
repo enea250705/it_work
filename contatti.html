@@ -209,7 +209,7 @@
             var heroVideo = document.getElementById('hero-video');
             if (heroVideo) {
                 const isMobile = window.innerWidth <= 1024;
-                let videoSrc = isMobile ? 'BRAIN.SPACE-HERO-SHORT-LR-MOBILE.mp4' : 'brain-space-hero-video.mp4';
+                let videoSrc = isMobile ? 'about-hero-mobile.mp4' : 'brain-space-hero-video.mp4';
                 
                 // Aggressively clear any existing source to prevent caching issues
                 heroVideo.pause();
@@ -218,7 +218,10 @@
                 heroVideo.load(); // Force unload
                 
                 // Add page-specific cache-busting parameter to prevent CDN/browser caching
-                const cacheBuster = '?page=contatti&v=1';
+                // For mobile, use more aggressive cache-busting with timestamp
+                const cacheBuster = isMobile 
+                    ? '?page=contatti&v=' + Date.now() + '&m=1'
+                    : '?page=contatti&v=1';
                 videoSrc = videoSrc + cacheBuster;
                 
                 console.log('Contatti page - Setting video source:', videoSrc);
@@ -276,7 +279,7 @@
                 heroVideo.addEventListener('error', function(e) {
                     setTimeout(fadeInVideo, 500);
                     if (isMobile && videoSrc.includes('mobile')) {
-                        heroVideo.src = 'about-hero-mobile.mp4';
+                        heroVideo.src = 'about-hero-mobile.mp4?page=contatti&v=1';
                         heroVideo.load();
                     }
                 });

@@ -252,8 +252,10 @@
                 heroVideo.load(); // Force unload
                 
                 // Add page-specific cache-busting parameter to prevent CDN/browser caching
-                // Using page name ensures each page gets unique video, but allows caching per page
-                const cacheBuster = '?page=index&v=1';
+                // For mobile, use more aggressive cache-busting with timestamp
+                const cacheBuster = isMobile 
+                    ? '?page=index&v=' + Date.now() + '&m=1'
+                    : '?page=index&v=1';
                 videoSrc = videoSrc + cacheBuster;
                 
                 // Set src directly on video element (more reliable on mobile)

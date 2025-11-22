@@ -233,7 +233,10 @@
                 heroVideo.load(); // Force unload
                 
                 // Add page-specific cache-busting parameter to prevent CDN/browser caching
-                const cacheBuster = '?page=shop&v=1';
+                // For mobile, use more aggressive cache-busting with timestamp
+                const cacheBuster = isMobile 
+                    ? '?page=shop&v=' + Date.now() + '&m=1'
+                    : '?page=shop&v=1';
                 videoSrc = videoSrc + cacheBuster;
                 
                 console.log('Shop page - Setting video source:', videoSrc);

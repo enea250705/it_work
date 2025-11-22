@@ -219,7 +219,7 @@
             var heroVideo = document.getElementById('hero-video');
             if (heroVideo) {
                 const isMobile = window.innerWidth <= 1024;
-                let videoSrc = isMobile ? 'about-hero-mobile.mp4' : 'BS-COMFORT.mp4';
+                let videoSrc = isMobile ? 'brain-space-hero-mobile.mp4' : 'BS-COMFORT.mp4';
                 
                 // Aggressively clear any existing source to prevent caching issues
                 heroVideo.pause();
@@ -228,7 +228,10 @@
                 heroVideo.load(); // Force unload
                 
                 // Add page-specific cache-busting parameter to prevent CDN/browser caching
-                const cacheBuster = '?page=servizi&v=1';
+                // For mobile, use more aggressive cache-busting with timestamp
+                const cacheBuster = isMobile 
+                    ? '?page=servizi&v=' + Date.now() + '&m=1'
+                    : '?page=servizi&v=1';
                 videoSrc = videoSrc + cacheBuster;
                 
                 console.log('Servizi page - Setting video source:', videoSrc);
@@ -286,7 +289,7 @@
                 heroVideo.addEventListener('error', function(e) {
                     setTimeout(fadeInVideo, 500);
                     if (isMobile && videoSrc.includes('mobile')) {
-                        heroVideo.src = 'BS-COMFORT.mp4';
+                        heroVideo.src = 'brain-space-hero-mobile.mp4?page=servizi&v=1';
                         heroVideo.load();
                     }
                 });
