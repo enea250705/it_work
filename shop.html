@@ -319,7 +319,12 @@
                 if (!titleElement || !subtitleElement) {
                     if (titleElement) titleElement.textContent = 'Shop Online';
                     if (subtitleElement) {
-                        subtitleElement.textContent = 'Computer, accessori e soluzioni informatiche';
+                        const isMobile = window.innerWidth <= 768;
+                        if (isMobile) {
+                            subtitleElement.innerHTML = 'Computer, accessori e soluzioni<br>informatiche';
+                        } else {
+                            subtitleElement.textContent = 'Computer, accessori e soluzioni informatiche';
+                        }
                         subtitleElement.style.opacity = '1';
                     }
                     return;
@@ -338,7 +343,15 @@
                     // Allow wrapping on mobile, use nowrap on desktop for titles only
                     const isMobile = window.innerWidth <= 768;
                     const isSubtitle = element.id === 'typewriter-subtitle';
-                    element.style.whiteSpace = (isMobile || isSubtitle) ? 'normal' : 'nowrap';
+                    
+                    // Prevent word breaking during typing
+                    if (isSubtitle && isMobile) {
+                        element.style.whiteSpace = 'nowrap';
+                        element.style.wordBreak = 'keep-all';
+                        element.style.overflowWrap = 'normal';
+                    } else {
+                        element.style.whiteSpace = (isMobile || isSubtitle) ? 'normal' : 'nowrap';
+                    }
                     
                     // Create cursor element
                     const cursor = document.createElement('span');
@@ -356,7 +369,20 @@
                         } else {
                             setTimeout(() => {
                                 cursor.remove();
-                                element.style.whiteSpace = 'normal';
+                                
+                                // For mobile, split subtitle into lines to prevent word breaking
+                                if (isSubtitle && isMobile) {
+                                    // Split into two parts: "Computer, accessori e soluzioni" | "informatiche"
+                                    const part1 = 'Computer, accessori e soluzioni';
+                                    const part2 = 'informatiche';
+                                    
+                                    element.innerHTML = part1 + '<br>' + part2;
+                                    element.style.whiteSpace = 'normal';
+                                    element.style.wordBreak = 'normal';
+                                    element.style.overflowWrap = 'break-word';
+                                } else {
+                                    element.style.whiteSpace = 'normal';
+                                }
                             }, 600);
                             if (callback) callback();
                         }
