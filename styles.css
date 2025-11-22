@@ -282,7 +282,6 @@ body.fade-in.loaded {
     z-index: 2;
     display: block;
     visibility: visible;
-    background: #000;
 }
 
 .hero-video-overlay {

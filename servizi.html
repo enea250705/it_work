@@ -218,86 +218,60 @@
         (function() {
             var heroVideo = document.getElementById('hero-video');
             if (heroVideo) {
-                // Set video source based on screen size
                 const isMobile = window.innerWidth <= 1024;
-                const source = document.createElement('source');
+                let videoSrc = isMobile ? 'brain-space-hero-mobile.mp4' : 'TECHNOLOGY.mp4';
                 
-                if (isMobile) {
-                    source.src = 'brain-space-hero-mobile.mp4';
-                    source.type = 'video/mp4';
-                } else {
-                    source.src = 'TECHNOLOGY.mp4';
-                    source.type = 'video/mp4';
-                }
-                
-                heroVideo.appendChild(source);
-                
+                heroVideo.src = videoSrc;
                 heroVideo.style.display = 'block';
-                heroVideo.style.opacity = '0';
-                heroVideo.style.transform = 'scale(1.05)';
-                heroVideo.style.transition = 'opacity 1.5s cubic-bezier(0.4, 0, 0.2, 1), transform 1.5s cubic-bezier(0.4, 0, 0.2, 1)';
+                heroVideo.style.opacity = '1';
+                heroVideo.style.transform = 'scale(1)';
                 
-                heroVideo.setAttribute('autoplay', 'true');
-                heroVideo.setAttribute('muted', 'true');
-                heroVideo.setAttribute('playsinline', 'true');
-                heroVideo.setAttribute('loop', 'true');
+                heroVideo.setAttribute('autoplay', '');
+                heroVideo.setAttribute('muted', '');
+                heroVideo.setAttribute('playsinline', '');
+                heroVideo.setAttribute('loop', '');
+                heroVideo.muted = true;
                 
                 heroVideo.load();
                 
-                const playPromise = heroVideo.play();
-                if (playPromise !== undefined) {
-                    playPromise.catch(error => {
-                        console.log('Autoplay prevented');
-                    });
-                }
+                const tryPlay = () => {
+                    const playPromise = heroVideo.play();
+                    if (playPromise !== undefined) {
+                        playPromise.then(() => {
+                            console.log('Video playing successfully');
+                        }).catch(error => {
+                            console.log('Autoplay prevented:', error);
+                            if (isMobile) {
+                                setTimeout(() => {
+                                    heroVideo.play().catch(e => console.log('Retry play failed:', e));
+                                }, 500);
+                            }
+                        });
+                    }
+                };
                 
+                heroVideo.addEventListener('loadeddata', tryPlay);
+                heroVideo.addEventListener('canplay', function() {
+                    tryPlay();
+                    this.style.opacity = '1';
+                });
                 heroVideo.addEventListener('loadedmetadata', function() {
                     this.currentTime = 0;
                 });
-                
-                heroVideo.addEventListener('canplay', function() {
-                    setTimeout(() => {
-                        this.style.opacity = '1';
-                        this.style.transform = 'scale(1)';
-                    }, 200);
-                });
-                
-                heroVideo.addEventListener('loadeddata', function() {
-                    setTimeout(() => {
-                        if (this.style.opacity === '0') {
-                            this.style.opacity = '1';
-                            this.style.transform = 'scale(1)';
-                        }
-                    }, 500);
-                });
-                
-                if (isMobile) {
-                    setTimeout(() => {
-                        heroVideo.style.opacity = '1';
-                        heroVideo.style.transform = 'scale(1)';
-                    }, 1000);
-                }
-                
                 heroVideo.addEventListener('timeupdate', function() {
                     if (this.currentTime >= 5) {
                         this.currentTime = 0;
                     }
                 });
-                
                 heroVideo.addEventListener('error', function(e) {
                     console.error('Video error:', this.error, e);
-                    setTimeout(() => {
-                        this.style.opacity = '1';
-                        this.style.transform = 'scale(1)';
-                    }, 1000);
+                    if (isMobile && videoSrc.includes('mobile')) {
+                        heroVideo.src = 'TECHNOLOGY.mp4';
+                        heroVideo.load();
+                    }
                 });
                 
-                setTimeout(() => {
-                    if (heroVideo.style.opacity === '0') {
-                        heroVideo.style.opacity = '1';
-                        heroVideo.style.transform = 'scale(1)';
-                    }
-                }, 2000);
+                tryPlay();
             }
         })();
 
