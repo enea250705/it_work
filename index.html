@@ -248,11 +248,9 @@
                 // Set src directly on video element (more reliable on mobile)
                 heroVideo.src = videoSrc;
                 
-                // Ensure video is visible and ready for mobile
+                // Start hidden for beautiful fade-in
                 heroVideo.style.display = 'block';
-                heroVideo.style.opacity = '1'; // Start visible on mobile
-                heroVideo.style.transform = 'scale(1)';
-                heroVideo.style.background = 'transparent'; // Remove any black background
+                heroVideo.style.background = 'transparent';
                 
                 // Set video attributes for mobile compatibility
                 heroVideo.setAttribute('autoplay', '');
@@ -260,10 +258,17 @@
                 heroVideo.setAttribute('playsinline', '');
                 heroVideo.setAttribute('loop', '');
                 heroVideo.setAttribute('preload', 'auto');
-                heroVideo.muted = true; // Ensure muted for autoplay
+                heroVideo.muted = true;
                 
                 // Load the video
                 heroVideo.load();
+                
+                // Beautiful fade-in function
+                const fadeInVideo = () => {
+                    requestAnimationFrame(() => {
+                        heroVideo.classList.add('loaded');
+                    });
+                };
                 
                 // Try to play immediately
                 const tryPlay = () => {
@@ -271,26 +276,31 @@
                     if (playPromise !== undefined) {
                         playPromise.then(() => {
                             console.log('Video playing successfully');
+                            fadeInVideo();
                         }).catch(error => {
                             console.log('Autoplay prevented:', error);
-                            // On mobile, try again after a short delay
                             if (isMobile) {
                                 setTimeout(() => {
-                                    heroVideo.play().catch(e => console.log('Retry play failed:', e));
-                                }, 500);
+                                    heroVideo.play().then(() => fadeInVideo()).catch(e => console.log('Retry play failed:', e));
+                                }, 300);
                             }
                         });
                     }
                 };
                 
-                // Try to play when video can start playing
+                // Fade in as soon as video can play (earliest possible)
                 heroVideo.addEventListener('loadeddata', function() {
                     tryPlay();
+                    setTimeout(fadeInVideo, 100);
                 });
                 
                 heroVideo.addEventListener('canplay', function() {
                     tryPlay();
-                    this.style.opacity = '1';
+                    fadeInVideo();
+                });
+                
+                heroVideo.addEventListener('canplaythrough', function() {
+                    fadeInVideo();
                 });
                 
                 heroVideo.addEventListener('loadedmetadata', function() {
@@ -305,10 +315,9 @@
                 });
                 
                 heroVideo.addEventListener('error', function(e) {
-                    console.error('Video error:', this.error, this.networkState, e);
-                    // Try fallback source on error
+                    console.error('Video error:', this.error, e);
+                    setTimeout(fadeInVideo, 500);
                     if (isMobile && videoSrc.includes('mobile')) {
-                        console.log('Trying fallback desktop video');
                         heroVideo.src = 'brain-space-hero-desktop.webm';
                         heroVideo.load();
                     }
@@ -316,6 +325,9 @@
                 
                 // Initial play attempt
                 tryPlay();
+                
+                // Fallback fade-in after short delay
+                setTimeout(fadeInVideo, 800);
             }
         })();
 

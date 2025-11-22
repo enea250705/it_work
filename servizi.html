@@ -219,12 +219,10 @@
             var heroVideo = document.getElementById('hero-video');
             if (heroVideo) {
                 const isMobile = window.innerWidth <= 1024;
-                let videoSrc = isMobile ? 'brain-space-hero-mobile.mp4' : 'TECHNOLOGY.mp4';
+                let videoSrc = isMobile ? 'about-hero-mobile.mp4' : 'BS-COMFORT.mp4';
                 
                 heroVideo.src = videoSrc;
                 heroVideo.style.display = 'block';
-                heroVideo.style.opacity = '1';
-                heroVideo.style.transform = 'scale(1)';
                 heroVideo.style.background = 'transparent';
                 
                 heroVideo.setAttribute('autoplay', '');
@@ -236,27 +234,36 @@
                 
                 heroVideo.load();
                 
+                const fadeInVideo = () => {
+                    requestAnimationFrame(() => {
+                        heroVideo.classList.add('loaded');
+                    });
+                };
+                
                 const tryPlay = () => {
                     const playPromise = heroVideo.play();
                     if (playPromise !== undefined) {
                         playPromise.then(() => {
-                            console.log('Video playing successfully');
+                            fadeInVideo();
                         }).catch(error => {
-                            console.log('Autoplay prevented:', error);
                             if (isMobile) {
                                 setTimeout(() => {
-                                    heroVideo.play().catch(e => console.log('Retry play failed:', e));
-                                }, 500);
+                                    heroVideo.play().then(() => fadeInVideo()).catch(e => {});
+                                }, 300);
                             }
                         });
                     }
                 };
                 
-                heroVideo.addEventListener('loadeddata', tryPlay);
+                heroVideo.addEventListener('loadeddata', function() {
+                    tryPlay();
+                    setTimeout(fadeInVideo, 100);
+                });
                 heroVideo.addEventListener('canplay', function() {
                     tryPlay();
-                    this.style.opacity = '1';
+                    fadeInVideo();
                 });
+                heroVideo.addEventListener('canplaythrough', fadeInVideo);
                 heroVideo.addEventListener('loadedmetadata', function() {
                     this.currentTime = 0;
                 });
@@ -266,14 +273,15 @@
                     }
                 });
                 heroVideo.addEventListener('error', function(e) {
-                    console.error('Video error:', this.error, e);
+                    setTimeout(fadeInVideo, 500);
                     if (isMobile && videoSrc.includes('mobile')) {
-                        heroVideo.src = 'TECHNOLOGY.mp4';
+                        heroVideo.src = 'BS-COMFORT.mp4';
                         heroVideo.load();
                     }
                 });
                 
                 tryPlay();
+                setTimeout(fadeInVideo, 800);
             }
         })();
 
