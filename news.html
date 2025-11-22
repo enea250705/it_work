@@ -178,9 +178,26 @@
         (function() {
             var heroVideo = document.getElementById('hero-video');
             if (heroVideo) {
+                // Set video source based on screen size
+                const isMobile = window.innerWidth <= 1024;
+                const source = document.createElement('source');
+                
+                if (isMobile) {
+                    source.src = 'brain-space-hero-mobile.mp4';
+                    source.type = 'video/mp4';
+                } else {
+                    source.src = 'Brain_Lines_circle_1.webm';
+                    source.type = 'video/webm';
+                }
+                
+                heroVideo.appendChild(source);
+                
                 heroVideo.style.opacity = '0';
                 heroVideo.style.transform = 'scale(1.05)';
                 heroVideo.style.transition = 'opacity 1.5s cubic-bezier(0.4, 0, 0.2, 1), transform 1.5s cubic-bezier(0.4, 0, 0.2, 1)';
+                
+                // Load the video
+                heroVideo.load();
                 
                 heroVideo.addEventListener('loadedmetadata', function() {
                     this.currentTime = 0;
@@ -200,7 +217,7 @@
                 });
                 
                 heroVideo.addEventListener('error', function() {
-                    this.style.display = 'none';
+                    console.error('Video error:', this.error);
                 });
             }
         })();

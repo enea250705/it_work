@@ -42,8 +42,6 @@
     <section id="home" class="hero hero_home relative">
         <div class="vid-con absolute">
             <video id="hero-video" class="hero-video" autoplay loop muted playsinline>
-                <source src="brain-space-hero-mobile.mp4" type="video/mp4" media="(max-width: 1024px)">
-                <source src="brain-space-hero-video.mp4" type="video/mp4" media="(min-width: 1025px)">
             </video>
             <div class="hero-video-overlay"></div>
         </div>
@@ -210,9 +208,26 @@
         (function() {
             var heroVideo = document.getElementById('hero-video');
             if (heroVideo) {
+                // Set video source based on screen size
+                const isMobile = window.innerWidth <= 1024;
+                const source = document.createElement('source');
+                
+                if (isMobile) {
+                    source.src = 'brain-space-hero-mobile.mp4';
+                    source.type = 'video/mp4';
+                } else {
+                    source.src = 'brain-space-hero-video.mp4';
+                    source.type = 'video/mp4';
+                }
+                
+                heroVideo.appendChild(source);
+                
                 heroVideo.style.opacity = '0';
                 heroVideo.style.transform = 'scale(1.05)';
                 heroVideo.style.transition = 'opacity 1.5s cubic-bezier(0.4, 0, 0.2, 1), transform 1.5s cubic-bezier(0.4, 0, 0.2, 1)';
+                
+                // Load the video
+                heroVideo.load();
                 
                 heroVideo.addEventListener('loadedmetadata', function() {
                     this.currentTime = 0;
@@ -232,7 +247,7 @@
                 });
                 
                 heroVideo.addEventListener('error', function() {
-                    this.style.display = 'none';
+                    console.error('Video error:', this.error);
                 });
             }
         })();
